@@ -6,6 +6,8 @@
  ********************************************/
 
 #include <iostream>
+#include <format>
+#include <cstdio>
 #include <fstream>
 #include <filesystem>
 #include <string>
@@ -203,13 +205,28 @@ int main() {
             event.reply(output);
         }
 
+        // ======== MATH ======== // (Random number, recall theorems, etc)
+        if (event.command.get_command_name() == "add") {
+            std::string first_num = std::get<std::string>(event.get_parameter("first_number"));
+            std::string second_num = std::get<std::string>(event.get_parameter("second_number"));
+
+            double ans = std::stod(first_num) + std::stod(second_num);
+
+            // Remove trailing zeroes
+            std::string ans_str = std::to_string(ans);
+            ans_str.erase(ans_str.find_last_not_of('0') + 1, std::string::npos);
+            ans_str.erase(ans_str.find_last_not_of('.') + 1, std::string::npos);
+            
+            if (ans_str[ans_str.length() - 1] == '.') { ans_str.erase(ans_str.begin() + ans_str.length() - 1); } // Convert 123. to 123
+
+            event.reply(ans_str);
+        }
+
         // ======== TO DO LIST ======== //
 
         // ======== FORMAT TEXT ======== // (Subscripts, Superscripts, Greek symbols, Math symbols, just made for copy and pasting ease, could be considered a mini text parser)
 
         // ======== JAPANESE SUPPORT ======== //
-        
-        // ======== MATH ======== // (Random number, recall theorems, etc)
 
         // ======== EMOJI KITCHEN ======= // (When I'm on my computer for example, I want to access Emoji Kitchen too)
 
@@ -298,39 +315,40 @@ int main() {
     bot.on_ready([&bot](const dpp::ready_t& event) {
         if (dpp::run_once<struct register_bot_commands>()) {
             // ======= SHUN TRIVIA ======== //
-            bot.global_command_create(dpp::slashcommand("shun_names", "Outputs all forms of Shun's names", bot.me.id));
-            bot.global_command_create(dpp::slashcommand("shun_projects", "Outputs all forms of Shun's current projects", bot.me.id));
+            // bot.global_command_create(dpp::slashcommand("shun_names", "Outputs all forms of Shun's names", bot.me.id));
+            // bot.global_command_create(dpp::slashcommand("shun_projects", "Outputs all forms of Shun's current projects", bot.me.id));
 
-            // ======== Shun4miBot QUIRKS ======= //
-            bot.global_command_create(dpp::slashcommand("best_programming_language", "What is the best programming language?", bot.me.id));
-            bot.global_command_create(dpp::slashcommand("is_cpp_good", "Is C++ good?", bot.me.id));
-            bot.global_command_create(dpp::slashcommand("is_shun_good", "Is Shun good?", bot.me.id));
-            bot.global_command_create(dpp::slashcommand("do_i_speak_japanese", "Do I speak Japanese?", bot.me.id));
-            bot.global_command_create(dpp::slashcommand("do_i_speak_mandarin", "Do I speak Mandarin?", bot.me.id));
+            // // ======== Shun4miBot QUIRKS ======= //
+            // bot.global_command_create(dpp::slashcommand("best_programming_language", "What is the best programming language?", bot.me.id));
+            // bot.global_command_create(dpp::slashcommand("is_cpp_good", "Is C++ good?", bot.me.id));
+            // bot.global_command_create(dpp::slashcommand("is_shun_good", "Is Shun good?", bot.me.id));
+            // bot.global_command_create(dpp::slashcommand("do_i_speak_japanese", "Do I speak Japanese?", bot.me.id));
+            // bot.global_command_create(dpp::slashcommand("do_i_speak_mandarin", "Do I speak Mandarin?", bot.me.id));
 
-            // ======= PROGRAMMING AID ======= //
-            bot.global_command_create(dpp::slashcommand("c_includes", "What Shun includes in the beginning of a C program", bot.me.id));
-            bot.global_command_create(dpp::slashcommand("cpp_includes", "What Shun includes in the beginning of a C++ program", bot.me.id));
+            // // ======= PROGRAMMING AID ======= //
+            // bot.global_command_create(dpp::slashcommand("c_includes", "What Shun includes in the beginning of a C program", bot.me.id));
+            // bot.global_command_create(dpp::slashcommand("cpp_includes", "What Shun includes in the beginning of a C++ program", bot.me.id));
 
-            // ======== USER INTERACTIONS ======== //
-            bot.global_command_create(dpp::slashcommand("say_hi", "Says hi to the user who calls the command", bot.me.id));
-            bot.global_command_create(dpp::slashcommand("say", "The Shun4miBot would say whatever the user wants it to say as indicated", bot.me.id).add_option(dpp::command_option(dpp::co_string, "quote", "What you want me to say", true)));
+            // // ======== USER INTERACTIONS ======== //
+            // bot.global_command_create(dpp::slashcommand("say_hi", "Says hi to the user who calls the command", bot.me.id));
+            // bot.global_command_create(dpp::slashcommand("say", "The Shun4miBot would say whatever the user wants it to say as indicated", bot.me.id).add_option(dpp::command_option(dpp::co_string, "quote", "What you want me to say", true)));
 
-            // ======== SPINNER ======== //
-            // Default is separating by spaces, the other version is separating by |
-            bot.global_command_create(dpp::slashcommand("spin", "Spins amongst choices separated by a space bar", bot.me.id).add_option(dpp::command_option(dpp::co_string, "choices", "Choices to spin from", true)));
-            bot.global_command_create(dpp::slashcommand("spin_alt", "Spins amongst choices separated by a | symbol", bot.me.id).add_option(dpp::command_option(dpp::co_string, "choices", "Choices to spin from", true)));
-            bot.global_command_create(dpp::slashcommand("spin_separator", "Spins amongst choices separated by a specified separator that is one character long", bot.me.id).add_option(dpp::command_option(dpp::co_string, "separator", "Separator between each choice", true)).add_option(dpp::command_option(dpp::co_string, "choices", "Choices to spin from", true)));
+            // // ======== SPINNER ======== //
+            // // Default is separating by spaces, the other version is separating by |
+            // bot.global_command_create(dpp::slashcommand("spin", "Spins amongst choices separated by a space bar", bot.me.id).add_option(dpp::command_option(dpp::co_string, "choices", "Choices to spin from", true)));
+            // bot.global_command_create(dpp::slashcommand("spin_alt", "Spins amongst choices separated by a | symbol", bot.me.id).add_option(dpp::command_option(dpp::co_string, "choices", "Choices to spin from", true)));
+            // bot.global_command_create(dpp::slashcommand("spin_separator", "Spins amongst choices separated by a specified separator that is one character long", bot.me.id).add_option(dpp::command_option(dpp::co_string, "separator", "Separator between each choice", true)).add_option(dpp::command_option(dpp::co_string, "choices", "Choices to spin from", true)));
 
-            // ======== SHUFFLE ======== //
-            bot.global_command_create(dpp::slashcommand("shuffle", "Shuffles amongst choices separated by a space bar", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list", "List to shuffle", true)));
-            bot.global_command_create(dpp::slashcommand("shuffle_alt", "Shuffles amongst choices separated by a | symbol", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list", "List to shuffle", true)));
-            bot.global_command_create(dpp::slashcommand("shuffle_separator", "Shuffles amongst choices separated by a specified separator that is one character long", bot.me.id).add_option(dpp::command_option(dpp::co_string, "separator", "Separator between each choice", true)).add_option(dpp::command_option(dpp::co_string, "list", "List to shuffle", true)));
+            // // ======== SHUFFLE ======== //
+            // bot.global_command_create(dpp::slashcommand("shuffle", "Shuffles amongst choices separated by a space bar", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list", "List to shuffle", true)));
+            // bot.global_command_create(dpp::slashcommand("shuffle_alt", "Shuffles amongst choices separated by a | symbol", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list", "List to shuffle", true)));
+            // bot.global_command_create(dpp::slashcommand("shuffle_separator", "Shuffles amongst choices separated by a specified separator that is one character long", bot.me.id).add_option(dpp::command_option(dpp::co_string, "separator", "Separator between each choice", true)).add_option(dpp::command_option(dpp::co_string, "list", "List to shuffle", true)));
 
-            // ======== KAOMOJIS ======== // (Outputs multiple kaomojis to copy and paste from depending on a certain mood)
-            bot.global_command_create(dpp::slashcommand("kaomoji_list", "Lists out a bunch of kaomojis depending on the mood chosen by the user", bot.me.id).add_option(dpp::command_option(dpp::co_string, "mood", "Mood of kaomojis to list", true).set_auto_complete(true)));
+            // // ======== KAOMOJIS ======== // (Outputs multiple kaomojis to copy and paste from depending on a certain mood)
+            // bot.global_command_create(dpp::slashcommand("kaomoji_list", "Lists out a bunch of kaomojis depending on the mood chosen by the user", bot.me.id).add_option(dpp::command_option(dpp::co_string, "mood", "Mood of kaomojis to list", true).set_auto_complete(true)));
 
             // ======== MATH ======== // (Operations, Random Number, Recall Theorems, etc)
+            // bot.global_command_create(dpp::slashcommand("add", "Adds two numbers together", bot.me.id).add_option(dpp::command_option(dpp::co_string, "first_number", "First number to add", true)).add_option(dpp::command_option(dpp::co_string, "second_number", "Second number to add", true)));
 
             // ======== TO DO LIST ======== //
 
