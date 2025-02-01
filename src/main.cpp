@@ -206,11 +206,22 @@ int main() {
         }
 
         // ======== MATH ======== // (Random number, recall theorems, etc)
-        std::vector<std::string> math_operators = {"add", "subtract", "minus", "multiply", "divide", "int_divide", "modulus", "power", "factorial", "log"};
+        std::vector<std::string> math_operators = {"add", "subtract", "minus", "multiply", "divide", "int_divide", "modulus", "power", "factorial", "log", "random_int"};
         if (std::find(math_operators.begin(), math_operators.end(), event.command.get_command_name()) != math_operators.end()) {
             std::string curr_operator = event.command.get_command_name();
-            double first_num = (curr_operator != "factorial" ? std::stod(std::get<std::string>(event.get_parameter("first_number"))) : std::stod(std::get<std::string>(event.get_parameter("number"))));
-            double second_num = (curr_operator != "factorial" ? std::stod(std::get<std::string>(event.get_parameter("second_number"))) : -1.0);
+            std::string first_number_str = "first_number";
+            std::string second_number_str = "second_number";
+
+            if (curr_operator == "power") {
+                first_number_str = "base";
+                second_number_str = "exponent";
+            } else if (curr_operator == "random_int") {
+                first_number_str = "lower_bound";
+                second_number_str = "upper_bound";
+            }
+            
+            double first_num = (curr_operator != "factorial" ? std::stod(std::get<std::string>(event.get_parameter(first_number_str))) : std::stod(std::get<std::string>(event.get_parameter("number"))));
+            double second_num = (curr_operator != "factorial" ? std::stod(std::get<std::string>(event.get_parameter(second_number_str))) : -1.0);
             bool valid = true;
 
             // Check validity (Division by 0, integer stuff, negative ranges for powers and logs etc)
@@ -241,6 +252,20 @@ int main() {
                     event.reply("Invalid Input");
                     valid = false;
                 }
+            } else if (curr_operator == "random_int") {
+                bool first_int = (abs(first_num - (int)(first_num)) <= 0.000000001);
+                bool second_int = (abs(second_num - (int)(second_num)) <= 0.000000001);
+                
+                if (first_num > second_num) {
+                    event.reply("Lower bound should be smaller than or equal to the upper bound");
+                    valid = false;
+                } else if (curr_operator == "random_int" && (!first_int || !second_int)) {
+                    event.reply("Inputs should be integers.");
+                    valid = false;
+                } else if (first_num == second_num) {
+                    event.reply(std::to_string((int)(first_num)));
+                    valid = false;
+                }
             }
             
             // Run the actual operation
@@ -262,6 +287,11 @@ int main() {
                     }
                 }
                 else if (curr_operator == "log") { ans = std::log(second_num)/std::log(first_num); }
+                else if (curr_operator == "random_int") {
+                    int random = std::rand();
+                    int diff = second_num - first_num;
+                    ans = (random % diff + diff) % diff + first_num;
+                }
 
                 // Remove trailing zeroes
                 std::string ans_str = std::to_string(ans);
@@ -274,13 +304,16 @@ int main() {
             }
         }
 
-        // ======== TO DO LIST ======== //
+        // ======== JAPANESE SUPPORT ======== //
+        if (event.command.get_command_name() == "jp_shortcut") {
+
+        }
 
         // ======== FORMAT TEXT ======== // (Subscripts, Superscripts, Greek symbols, Math symbols, just made for copy and pasting ease, could be considered a mini text parser)
 
-        // ======== JAPANESE SUPPORT ======== //
-
         // ======== EMOJI KITCHEN ======= // (When I'm on my computer for example, I want to access Emoji Kitchen too)
+
+        // ======== TO DO LIST ======== //
 
         // ======== Shun4MIDI ======== //
     });
@@ -355,10 +388,14 @@ int main() {
                 event.reply(list);
             }
 
-            // ======== Shun4mi ======== //
+            // ======== Shun4mi(Bot), "Shut up you lil shit" ======== //
             std::transform(message.begin(), message.end(), message.begin(), ::tolower);
-            if (message.find("shun4mi") != std::string::npos || message.find("shunami") != std::string::npos || message.find("tsunami") != std::string::npos || message.find("tsun4mi") != std::string::npos) {
+            if (message.find("shun4mibot") != std::string::npos || ((message.find("my bot") != std::string::npos || message.find("my discord bot") != std::string::npos) && event.msg.author.username == "shun4midx")) {
+                event.reply("Omg me mention! I love Shun4mis :D :ocean::ocean:", true);
+            } else if (message.find("shun4mi") != std::string::npos || message.find("shunami") != std::string::npos || message.find("tsunami") != std::string::npos || message.find("tsun4mi") != std::string::npos) {
                 event.reply("I love Shun4mis! :ocean::ocean:", true);
+            } else if (message.find("shut up you lil shit") != std::string::npos || message.find("shut up, you lil shit") != std::string::npos) {
+                event.reply(":(", true);
             }
         }
     });
@@ -391,12 +428,12 @@ int main() {
             bot.global_command_create(dpp::slashcommand("spin_alt", "Spins amongst choices separated by a | symbol", bot.me.id).add_option(dpp::command_option(dpp::co_string, "choices", "Choices to spin from", true)));
             bot.global_command_create(dpp::slashcommand("spin_separator", "Spins amongst choices separated by a specified separator that is one character long", bot.me.id).add_option(dpp::command_option(dpp::co_string, "separator", "Separator between each choice", true)).add_option(dpp::command_option(dpp::co_string, "choices", "Choices to spin from", true)));
 
-            // // ======== SHUFFLE ======== //
+            // ======== SHUFFLE ======== //
             bot.global_command_create(dpp::slashcommand("shuffle", "Shuffles amongst choices separated by a space bar", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list", "List to shuffle", true)));
             bot.global_command_create(dpp::slashcommand("shuffle_alt", "Shuffles amongst choices separated by a | symbol", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list", "List to shuffle", true)));
             bot.global_command_create(dpp::slashcommand("shuffle_separator", "Shuffles amongst choices separated by a specified separator that is one character long", bot.me.id).add_option(dpp::command_option(dpp::co_string, "separator", "Separator between each choice", true)).add_option(dpp::command_option(dpp::co_string, "list", "List to shuffle", true)));
 
-            // // ======== KAOMOJIS ======== // (Outputs multiple kaomojis to copy and paste from depending on a certain mood)
+            // ======== KAOMOJIS ======== // (Outputs multiple kaomojis to copy and paste from depending on a certain mood)
             bot.global_command_create(dpp::slashcommand("kaomoji_list", "Lists out a bunch of kaomojis depending on the mood chosen by the user", bot.me.id).add_option(dpp::command_option(dpp::co_string, "mood", "Mood of kaomojis to list", true).set_auto_complete(true)));
 
             // ======== MATH ======== // (Include some theorems when needed later in the future)
@@ -407,15 +444,18 @@ int main() {
             bot.global_command_create(dpp::slashcommand("divide", "Divides two numbers", bot.me.id).add_option(dpp::command_option(dpp::co_string, "first_number", "First number in the division equation", true)).add_option(dpp::command_option(dpp::command_option(dpp::co_string, "second_number", "Second number in the division equation", true))));
             bot.global_command_create(dpp::slashcommand("int_divide", "Integer divides two integers", bot.me.id).add_option(dpp::command_option(dpp::co_string, "first_number", "First integer in the integer division equation", true)).add_option(dpp::command_option(dpp::command_option(dpp::co_string, "second_number", "Second integer in the integer division equation", true))));
             bot.global_command_create(dpp::slashcommand("modulus", "Finds the modulus of two integers", bot.me.id).add_option(dpp::command_option(dpp::co_string, "first_number", "First integer in the integer modulus equation", true)).add_option(dpp::command_option(dpp::command_option(dpp::co_string, "second_number", "Second integer in the integer modulus equation", true))));
-            bot.global_command_create(dpp::slashcommand("power", "Finds the power of one number to the other number", bot.me.id).add_option(dpp::command_option(dpp::co_string, "first_number", "Base of the expression", true)).add_option(dpp::command_option(dpp::command_option(dpp::co_string, "second_number", "Exponent of the expression", true))));
+            bot.global_command_create(dpp::slashcommand("power", "Finds the power of one number to the other number", bot.me.id).add_option(dpp::command_option(dpp::co_string, "base", "Base of the expression", true)).add_option(dpp::command_option(dpp::command_option(dpp::co_string, "exponent", "Exponent of the expression", true))));
             bot.global_command_create(dpp::slashcommand("factorial", "Finds the factorial of an integer", bot.me.id).add_option(dpp::command_option(dpp::co_string, "number", "Number to be factorial'ed", true)));
             bot.global_command_create(dpp::slashcommand("log", "Finds the log base one number to the other number", bot.me.id).add_option(dpp::command_option(dpp::co_string, "first_number", "Base of the expression", true)).add_option(dpp::command_option(dpp::command_option(dpp::co_string, "second_number", "Ohter number of the expression", true))));
-
-            // ======== TO DO LIST ======== //
-
-            // ======== FORMAT TEXT ======== // (Subscripts, Superscripts, Greek symbols, Math symbols, just made for copy and pasting ease, could be considered a mini text parser)
+            bot.global_command_create(dpp::slashcommand("random_int", "Generates a random number between two integers", bot.me.id).add_option(dpp::command_option(dpp::co_string, "lower_bound", "Lower bound", true)).add_option(dpp::command_option(dpp::co_string, "upper_bound", "Upper bound", true)));
 
             // ======== JAPANESE SUPPORT ======== // (Mainly like converting words I know from English to Japanese but of course it could be romaji to kanji)
+            
+            // ======== FORMAT TEXT ======== // (Subscripts, Superscripts, Greek symbols, Math symbols, just made for copy and pasting ease, could be considered a mini text parser)
+            
+            // ======== EMOJI KITCHEN ======= // (When I'm on my computer for example, I want to access Emoji Kitchen too)
+
+            // ======== TO DO LIST ======== //
 
             // ======== Shun4MIDI ======== //
         }
