@@ -206,20 +206,72 @@ int main() {
         }
 
         // ======== MATH ======== // (Random number, recall theorems, etc)
-        if (event.command.get_command_name() == "add") {
-            std::string first_num = std::get<std::string>(event.get_parameter("first_number"));
-            std::string second_num = std::get<std::string>(event.get_parameter("second_number"));
+        std::vector<std::string> math_operators = {"add", "subtract", "minus", "multiply", "divide", "int_divide", "modulus", "power", "factorial", "log"};
+        if (std::find(math_operators.begin(), math_operators.end(), event.command.get_command_name()) != math_operators.end()) {
+            std::string curr_operator = event.command.get_command_name();
+            double first_num = (curr_operator != "factorial" ? std::stod(std::get<std::string>(event.get_parameter("first_number"))) : std::stod(std::get<std::string>(event.get_parameter("number"))));
+            double second_num = (curr_operator != "factorial" ? std::stod(std::get<std::string>(event.get_parameter("second_number"))) : -1.0);
+            bool valid = true;
 
-            double ans = std::stod(first_num) + std::stod(second_num);
+            // Check validity (Division by 0, integer stuff, negative ranges for powers and logs etc)
+            if ((curr_operator == "divide" || curr_operator == "int_divide" || curr_operator == "modulus" || curr_operator == "log") && second_num == 0) {
+                // Division by 0
+                event.reply("Invalid Input");
+                valid = false;
+            } else if (curr_operator == "int_divide" || curr_operator == "modulus" || curr_operator == "factorial") {
+                // Integer restrictions
+                bool first_int = (abs(first_num - (int)(first_num)) <= 0.000000001);
+                bool second_int = (abs(second_num - (int)(second_num)) <= 0.000000001);
 
-            // Remove trailing zeroes
-            std::string ans_str = std::to_string(ans);
-            ans_str.erase(ans_str.find_last_not_of('0') + 1, std::string::npos);
-            ans_str.erase(ans_str.find_last_not_of('.') + 1, std::string::npos);
+                if (!first_int || !second_int) {
+                    event.reply("Invalid Input");
+                    valid = false;
+                }
+            } else if (curr_operator == "power") {
+                // Negative ranges for powers
+                bool second_int = (abs(second_num - (int)(second_num)) <= 0.000000001);
+
+                if (first_num < 0 && !second_int) {
+                    event.reply("Invalid Input");
+                    valid = false;
+                }
+            } else if (curr_operator == "log") {
+                // Negative ranges for logs and base 1 ranges (Base is first_num)
+                if (first_num < 0 || second_num < 0 || first_num == 1) {
+                    event.reply("Invalid Input");
+                    valid = false;
+                }
+            }
             
-            if (ans_str[ans_str.length() - 1] == '.') { ans_str.erase(ans_str.begin() + ans_str.length() - 1); } // Convert 123. to 123
+            // Run the actual operation
+            if (valid) {
+                // Operator
+                double ans;
+                if (curr_operator == "add") { ans = first_num + second_num; }
+                else if (curr_operator == "subtract" || curr_operator == "minus") { ans = first_num - second_num; }
+                else if (curr_operator == "multiply") { ans = first_num * second_num; }
+                else if (curr_operator == "divide") { ans = first_num / second_num; }
+                else if (curr_operator == "int_divide") { ans = (double)((int)(first_num / second_num)); }
+                else if (curr_operator == "modulus") { ans = (double)((int)(first_num) % (int)(second_num)); }
+                else if (curr_operator == "power") { ans = std::pow(first_num, second_num); }
+                else if (curr_operator == "factorial") {
+                    ans = 1.0;
+                    while (first_num > 0) {
+                        ans *= first_num;
+                        first_num--;
+                    }
+                }
+                else if (curr_operator == "log") { ans = std::log(second_num)/std::log(first_num); }
 
-            event.reply(ans_str);
+                // Remove trailing zeroes
+                std::string ans_str = std::to_string(ans);
+                ans_str.erase(ans_str.find_last_not_of('0') + 1, std::string::npos);
+                ans_str.erase(ans_str.find_last_not_of('.') + 1, std::string::npos);
+                
+                if (ans_str[ans_str.length() - 1] == '.') { ans_str.erase(ans_str.begin() + ans_str.length() - 1); } // Convert 123. to 123
+
+                event.reply(ans_str);
+            }
         }
 
         // ======== TO DO LIST ======== //
@@ -315,40 +367,49 @@ int main() {
     bot.on_ready([&bot](const dpp::ready_t& event) {
         if (dpp::run_once<struct register_bot_commands>()) {
             // ======= SHUN TRIVIA ======== //
-            // bot.global_command_create(dpp::slashcommand("shun_names", "Outputs all forms of Shun's names", bot.me.id));
-            // bot.global_command_create(dpp::slashcommand("shun_projects", "Outputs all forms of Shun's current projects", bot.me.id));
+            bot.global_command_create(dpp::slashcommand("shun_names", "Outputs all forms of Shun's names", bot.me.id));
+            bot.global_command_create(dpp::slashcommand("shun_projects", "Outputs all forms of Shun's current projects", bot.me.id));
 
-            // // ======== Shun4miBot QUIRKS ======= //
-            // bot.global_command_create(dpp::slashcommand("best_programming_language", "What is the best programming language?", bot.me.id));
-            // bot.global_command_create(dpp::slashcommand("is_cpp_good", "Is C++ good?", bot.me.id));
-            // bot.global_command_create(dpp::slashcommand("is_shun_good", "Is Shun good?", bot.me.id));
-            // bot.global_command_create(dpp::slashcommand("do_i_speak_japanese", "Do I speak Japanese?", bot.me.id));
-            // bot.global_command_create(dpp::slashcommand("do_i_speak_mandarin", "Do I speak Mandarin?", bot.me.id));
+            // ======== Shun4miBot QUIRKS ======= //
+            bot.global_command_create(dpp::slashcommand("best_programming_language", "What is the best programming language?", bot.me.id));
+            bot.global_command_create(dpp::slashcommand("is_cpp_good", "Is C++ good?", bot.me.id));
+            bot.global_command_create(dpp::slashcommand("is_shun_good", "Is Shun good?", bot.me.id));
+            bot.global_command_create(dpp::slashcommand("do_i_speak_japanese", "Do I speak Japanese?", bot.me.id));
+            bot.global_command_create(dpp::slashcommand("do_i_speak_mandarin", "Do I speak Mandarin?", bot.me.id));
 
-            // // ======= PROGRAMMING AID ======= //
-            // bot.global_command_create(dpp::slashcommand("c_includes", "What Shun includes in the beginning of a C program", bot.me.id));
-            // bot.global_command_create(dpp::slashcommand("cpp_includes", "What Shun includes in the beginning of a C++ program", bot.me.id));
+            // ======= PROGRAMMING AID ======= //
+            bot.global_command_create(dpp::slashcommand("c_includes", "What Shun includes in the beginning of a C program", bot.me.id));
+            bot.global_command_create(dpp::slashcommand("cpp_includes", "What Shun includes in the beginning of a C++ program", bot.me.id));
 
-            // // ======== USER INTERACTIONS ======== //
-            // bot.global_command_create(dpp::slashcommand("say_hi", "Says hi to the user who calls the command", bot.me.id));
-            // bot.global_command_create(dpp::slashcommand("say", "The Shun4miBot would say whatever the user wants it to say as indicated", bot.me.id).add_option(dpp::command_option(dpp::co_string, "quote", "What you want me to say", true)));
+            // ======== USER INTERACTIONS ======== //
+            bot.global_command_create(dpp::slashcommand("say_hi", "Says hi to the user who calls the command", bot.me.id));
+            bot.global_command_create(dpp::slashcommand("say", "The Shun4miBot would say whatever the user wants it to say as indicated", bot.me.id).add_option(dpp::command_option(dpp::co_string, "quote", "What you want me to say", true)));
 
-            // // ======== SPINNER ======== //
-            // // Default is separating by spaces, the other version is separating by |
-            // bot.global_command_create(dpp::slashcommand("spin", "Spins amongst choices separated by a space bar", bot.me.id).add_option(dpp::command_option(dpp::co_string, "choices", "Choices to spin from", true)));
-            // bot.global_command_create(dpp::slashcommand("spin_alt", "Spins amongst choices separated by a | symbol", bot.me.id).add_option(dpp::command_option(dpp::co_string, "choices", "Choices to spin from", true)));
-            // bot.global_command_create(dpp::slashcommand("spin_separator", "Spins amongst choices separated by a specified separator that is one character long", bot.me.id).add_option(dpp::command_option(dpp::co_string, "separator", "Separator between each choice", true)).add_option(dpp::command_option(dpp::co_string, "choices", "Choices to spin from", true)));
+            // ======== SPINNER ======== //
+            // Default is separating by spaces, the other version is separating by |
+            bot.global_command_create(dpp::slashcommand("spin", "Spins amongst choices separated by a space bar", bot.me.id).add_option(dpp::command_option(dpp::co_string, "choices", "Choices to spin from", true)));
+            bot.global_command_create(dpp::slashcommand("spin_alt", "Spins amongst choices separated by a | symbol", bot.me.id).add_option(dpp::command_option(dpp::co_string, "choices", "Choices to spin from", true)));
+            bot.global_command_create(dpp::slashcommand("spin_separator", "Spins amongst choices separated by a specified separator that is one character long", bot.me.id).add_option(dpp::command_option(dpp::co_string, "separator", "Separator between each choice", true)).add_option(dpp::command_option(dpp::co_string, "choices", "Choices to spin from", true)));
 
             // // ======== SHUFFLE ======== //
-            // bot.global_command_create(dpp::slashcommand("shuffle", "Shuffles amongst choices separated by a space bar", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list", "List to shuffle", true)));
-            // bot.global_command_create(dpp::slashcommand("shuffle_alt", "Shuffles amongst choices separated by a | symbol", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list", "List to shuffle", true)));
-            // bot.global_command_create(dpp::slashcommand("shuffle_separator", "Shuffles amongst choices separated by a specified separator that is one character long", bot.me.id).add_option(dpp::command_option(dpp::co_string, "separator", "Separator between each choice", true)).add_option(dpp::command_option(dpp::co_string, "list", "List to shuffle", true)));
+            bot.global_command_create(dpp::slashcommand("shuffle", "Shuffles amongst choices separated by a space bar", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list", "List to shuffle", true)));
+            bot.global_command_create(dpp::slashcommand("shuffle_alt", "Shuffles amongst choices separated by a | symbol", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list", "List to shuffle", true)));
+            bot.global_command_create(dpp::slashcommand("shuffle_separator", "Shuffles amongst choices separated by a specified separator that is one character long", bot.me.id).add_option(dpp::command_option(dpp::co_string, "separator", "Separator between each choice", true)).add_option(dpp::command_option(dpp::co_string, "list", "List to shuffle", true)));
 
             // // ======== KAOMOJIS ======== // (Outputs multiple kaomojis to copy and paste from depending on a certain mood)
-            // bot.global_command_create(dpp::slashcommand("kaomoji_list", "Lists out a bunch of kaomojis depending on the mood chosen by the user", bot.me.id).add_option(dpp::command_option(dpp::co_string, "mood", "Mood of kaomojis to list", true).set_auto_complete(true)));
+            bot.global_command_create(dpp::slashcommand("kaomoji_list", "Lists out a bunch of kaomojis depending on the mood chosen by the user", bot.me.id).add_option(dpp::command_option(dpp::co_string, "mood", "Mood of kaomojis to list", true).set_auto_complete(true)));
 
-            // ======== MATH ======== // (Operations, Random Number, Recall Theorems, etc)
-            // bot.global_command_create(dpp::slashcommand("add", "Adds two numbers together", bot.me.id).add_option(dpp::command_option(dpp::co_string, "first_number", "First number to add", true)).add_option(dpp::command_option(dpp::co_string, "second_number", "Second number to add", true)));
+            // ======== MATH ======== // (Include some theorems when needed later in the future)
+            bot.global_command_create(dpp::slashcommand("add", "Adds two numbers together", bot.me.id).add_option(dpp::command_option(dpp::co_string, "first_number", "First number to add", true)).add_option(dpp::command_option(dpp::co_string, "second_number", "Second number to add", true)));
+            bot.global_command_create(dpp::slashcommand("subtract", "Subtracts two numbers", bot.me.id).add_option(dpp::command_option(dpp::co_string, "first_number", "First number in the subtraction equation", true)).add_option(dpp::command_option(dpp::command_option(dpp::co_string, "second_number", "Second number in the subtraction equation", true))));
+            bot.global_command_create(dpp::slashcommand("minus", "Subtracts two numbers", bot.me.id).add_option(dpp::command_option(dpp::co_string, "first_number", "First number in the subtraction equation", true)).add_option(dpp::command_option(dpp::command_option(dpp::co_string, "second_number", "Second number in the subtraction equation", true))));
+            bot.global_command_create(dpp::slashcommand("multiply", "Multiplies two numbers", bot.me.id).add_option(dpp::command_option(dpp::co_string, "first_number", "First number in the multiplication equation", true)).add_option(dpp::command_option(dpp::command_option(dpp::co_string, "second_number", "Second number in the multiplication equation", true))));
+            bot.global_command_create(dpp::slashcommand("divide", "Divides two numbers", bot.me.id).add_option(dpp::command_option(dpp::co_string, "first_number", "First number in the division equation", true)).add_option(dpp::command_option(dpp::command_option(dpp::co_string, "second_number", "Second number in the division equation", true))));
+            bot.global_command_create(dpp::slashcommand("int_divide", "Integer divides two integers", bot.me.id).add_option(dpp::command_option(dpp::co_string, "first_number", "First integer in the integer division equation", true)).add_option(dpp::command_option(dpp::command_option(dpp::co_string, "second_number", "Second integer in the integer division equation", true))));
+            bot.global_command_create(dpp::slashcommand("modulus", "Finds the modulus of two integers", bot.me.id).add_option(dpp::command_option(dpp::co_string, "first_number", "First integer in the integer modulus equation", true)).add_option(dpp::command_option(dpp::command_option(dpp::co_string, "second_number", "Second integer in the integer modulus equation", true))));
+            bot.global_command_create(dpp::slashcommand("power", "Finds the power of one number to the other number", bot.me.id).add_option(dpp::command_option(dpp::co_string, "first_number", "Base of the expression", true)).add_option(dpp::command_option(dpp::command_option(dpp::co_string, "second_number", "Exponent of the expression", true))));
+            bot.global_command_create(dpp::slashcommand("factorial", "Finds the factorial of an integer", bot.me.id).add_option(dpp::command_option(dpp::co_string, "number", "Number to be factorial'ed", true)));
+            bot.global_command_create(dpp::slashcommand("log", "Finds the log base one number to the other number", bot.me.id).add_option(dpp::command_option(dpp::co_string, "first_number", "Base of the expression", true)).add_option(dpp::command_option(dpp::command_option(dpp::co_string, "second_number", "Ohter number of the expression", true))));
 
             // ======== TO DO LIST ======== //
 
