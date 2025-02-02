@@ -22,17 +22,12 @@
 #include "parsing/parsing.h"
 #include "spinner/spinner.h"
 #include "shuffle/shuffle.h"
+#include "file_manager/file_manager.h"
 
 int main() {
     std::srand(unsigned(time(NULL)));
-    // Read BOT_TOKEN
-    std::string bot_token_path = (std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"bot_token.txt").string();
-    std::ifstream bot_token_file(bot_token_path);
-    std::string BOT_TOKEN;
-    getline(bot_token_file, BOT_TOKEN);
-    bot_token_file.close();
 
-    dpp::cluster bot(BOT_TOKEN, dpp::i_default_intents | dpp::i_message_content);
+    dpp::cluster bot(read("bot_token.txt"), dpp::i_default_intents | dpp::i_message_content);
  
     // Main Program
     bot.on_log(dpp::utility::cout_logger());
@@ -187,22 +182,7 @@ int main() {
 
         // ======== KAOMOJIS ======== // (For Lily, only need separate folder for text files since I'm lazy to edit)
         if (event.command.get_command_name() == "kaomoji_list") {
-            std::string mood = std::get<std::string>(event.get_parameter("mood"));
-            std::string kaomoji_mood_path = (std::filesystem::path(__FILE__).parent_path()/"kaomojis/").string() + mood + "_kaomojis.txt";
-            std::ifstream kaomoji_mood_file(kaomoji_mood_path);
-            std::string kaomoji_line;
-
-            std::string output = "";
-
-            while (getline(kaomoji_mood_file, kaomoji_line)) {
-                output = output + kaomoji_line + "\n";
-            }
-
-            kaomoji_mood_file.close();
-
-            output = "```\n" + output + "```";
-
-            event.reply(output);
+            event.reply("```\n" + read("kaomojis/" + std::get<std::string>(event.get_parameter("mood")) + "_kaomojis.txt", true) + "```");
         }
 
         // ======== MATH ======== // (Random number, recall theorems, etc)
@@ -227,7 +207,7 @@ int main() {
             // Check validity (Division by 0, integer stuff, negative ranges for powers and logs etc)
             if ((curr_operator == "divide" || curr_operator == "int_divide" || curr_operator == "modulus" || curr_operator == "log") && second_num == 0) {
                 // Division by 0
-                event.reply("Invalid Input");
+                event.reply("Invalid input");
                 valid = false;
             } else if (curr_operator == "int_divide" || curr_operator == "modulus" || curr_operator == "factorial") {
                 // Integer restrictions
@@ -235,7 +215,7 @@ int main() {
                 bool second_int = (abs(second_num - (int)(second_num)) <= 0.000000001);
 
                 if (!first_int || !second_int) {
-                    event.reply("Invalid Input");
+                    event.reply("Invalid input");
                     valid = false;
                 }
             } else if (curr_operator == "power") {
@@ -243,13 +223,13 @@ int main() {
                 bool second_int = (abs(second_num - (int)(second_num)) <= 0.000000001);
 
                 if (first_num < 0 && !second_int) {
-                    event.reply("Invalid Input");
+                    event.reply("Invalid input");
                     valid = false;
                 }
             } else if (curr_operator == "log") {
                 // Negative ranges for logs and base 1 ranges (Base is first_num)
                 if (first_num < 0 || second_num < 0 || first_num == 1) {
-                    event.reply("Invalid Input");
+                    event.reply("Invalid input");
                     valid = false;
                 }
             } else if (curr_operator == "random_int") {
@@ -306,12 +286,16 @@ int main() {
 
         // ======== JAPANESE SUPPORT ======== //
         if (event.command.get_command_name() == "jp_shortcut") {
-
+            
         }
 
-        // ======== FORMAT TEXT ======== // (Subscripts, Superscripts, Greek symbols, Math symbols, just made for copy and pasting ease, could be considered a mini text parser)
+        // ======== SPOTIFY LINKS ======== //
 
+        // ======== MISC PHOTOS ======== //
+        
         // ======== EMOJI KITCHEN ======= // (When I'm on my computer for example, I want to access Emoji Kitchen too)
+
+        // ======== FORMAT TEXT ======== // (Subscripts, Superscripts, Greek symbols, Math symbols, just made for copy and pasting ease, could be considered a mini text parser)
 
         // ======== TO DO LIST ======== //
 
@@ -321,18 +305,11 @@ int main() {
     // ========= LISTENING ======== //
     bot.on_message_create([&bot](const dpp::message_create_t& event) {
         // Carry on only if it's not from the bot itself
-        // Read usernames
-        std::string bot_username_path = (std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"bot_username.txt").string();;
-        std::ifstream bot_username_file(bot_username_path);
-        std::string BOT_USERNAME;
-        getline(bot_username_file, BOT_USERNAME);
-        bot_username_file.close();
-
-        if (event.msg.author.format_username() != BOT_USERNAME) {
+        if (event.msg.author.format_username() != read("bot_username.txt")) {
             std::string message = event.msg.content;
 
             // ======== Shun4miBotSays (My function only) ======= //
-            if (message.find("/bot_say") == 0 && event.msg.author.username == "shun4midx") { // Begins with /spin
+            if (message.find("/bot_say") == 0 && checkInstance("bot_say_auths.txt", event.msg.author.username)) { // Begins with /spin
                 std::string command = "/bot_say";
                 std::string quote = message.substr(command.length() + 1, message.length() - command.length());
                 bot.message_delete(event.msg.id, event.msg.channel_id);
@@ -388,6 +365,9 @@ int main() {
                 event.reply(list);
             }
 
+            // ======== PLURAL KIT THING FOR MY ACCOUNTS ======== //
+
+
             // ======== Shun4mi(Bot), "Shut up you lil shit" ======== //
             std::transform(message.begin(), message.end(), message.begin(), ::tolower);
             if (message.find("shun4mibot") != std::string::npos || ((message.find("my bot") != std::string::npos || message.find("my discord bot") != std::string::npos) && event.msg.author.username == "shun4midx")) {
@@ -402,6 +382,9 @@ int main() {
 
     // ======== INIT PART OF THE CODE ======== //
     bot.on_ready([&bot](const dpp::ready_t& event) {
+        // Bot status
+        bot.set_presence(dpp::presence(dpp::ps_online, dpp::at_game, "with Shun because I'm NOT held hostage"));
+
         if (dpp::run_once<struct register_bot_commands>()) {
             // ======= SHUN TRIVIA ======== //
             bot.global_command_create(dpp::slashcommand("shun_names", "Outputs all forms of Shun's names", bot.me.id));
@@ -448,12 +431,16 @@ int main() {
             bot.global_command_create(dpp::slashcommand("factorial", "Finds the factorial of an integer", bot.me.id).add_option(dpp::command_option(dpp::co_string, "number", "Number to be factorial'ed", true)));
             bot.global_command_create(dpp::slashcommand("log", "Finds the log base one number to the other number", bot.me.id).add_option(dpp::command_option(dpp::co_string, "first_number", "Base of the expression", true)).add_option(dpp::command_option(dpp::command_option(dpp::co_string, "second_number", "Ohter number of the expression", true))));
             bot.global_command_create(dpp::slashcommand("random_int", "Generates a random number between two integers", bot.me.id).add_option(dpp::command_option(dpp::co_string, "lower_bound", "Lower bound", true)).add_option(dpp::command_option(dpp::co_string, "upper_bound", "Upper bound", true)));
-
-            // ======== JAPANESE SUPPORT ======== // (Mainly like converting words I know from English to Japanese but of course it could be romaji to kanji)
             
-            // ======== FORMAT TEXT ======== // (Subscripts, Superscripts, Greek symbols, Math symbols, just made for copy and pasting ease, could be considered a mini text parser)
+            // ======== JAPANESE SUPPORT ======== // (Mainly like converting words I know from English to Japanese but of course it could be romaji to kanji)
+
+            // ======== SPOTIFY LINKS ======== //
+
+            // ======== MISC PHOTOS ======== //
             
             // ======== EMOJI KITCHEN ======= // (When I'm on my computer for example, I want to access Emoji Kitchen too)
+
+            // ======== FORMAT TEXT ======== // (Subscripts, Superscripts, Greek symbols, Math symbols, just made for copy and pasting ease, could be considered a mini text parser)
 
             // ======== TO DO LIST ======== //
 
