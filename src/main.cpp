@@ -19,10 +19,14 @@
 #include <dpp/message.h>
 #include <dpp/user.h>
 #include <dpp/cluster.h>
+#include <dpp/dispatcher.h>
 #include "parsing/parsing.h"
 #include "spinner/spinner.h"
 #include "shuffle/shuffle.h"
 #include "file_manager/file_manager.h"
+#include "japanese/japanese.h"
+#include "tic_tac_toe/tic_tac_toe.h"
+#include "zhuyin/zhuyin.h"
 
 int main() {
     std::srand(unsigned(time(NULL)));
@@ -146,8 +150,8 @@ int main() {
             event.edit_original_response(final_message);
         }
 
-        // ======== SHUFFLE ======== //
         if (event.command.get_command_name() == "shuffle" || event.command.get_command_name() == "shuffle_alt" || event.command.get_command_name() == "shuffle_separator") {
+        // ======== SHUFFLE ======== //
             std::string list = std::get<std::string>(event.get_parameter("list"));
             std::string parsed_list, shuffled_list;
             if (event.command.get_command_name() == "shuffle") {
@@ -284,10 +288,99 @@ int main() {
             }
         }
 
-        // ======== JAPANESE SUPPORT ======== //
-        if (event.command.get_command_name() == "jp_shortcut") {
-            
+        // ======== TIC TAC TOE ========= //
+        if (event.command.get_command_name() == "tic_tac_toe") {
+            std::string square = std::get<std::string>(event.get_parameter("square"));
+            std::vector<std::string> valid_squares = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+
+            if (std::find(valid_squares.begin(), valid_squares.end(), square) != valid_squares.end()) {
+                event.reply(ticTacToe(std::stoi(square), event.command.usr.username + "_"));
+            } else {
+                event.reply("Please choose a valid square from 1 to 9");
+            }
         }
+
+        if (event.command.get_command_name() == "quit_tic_tac_toe") {
+            if (quitGame(event.command.usr.username + "_")) {
+                event.reply("You successfully quit your Tic Tac Toe game!");
+            } else {
+                event.reply("You don't have a Tic Tac Toe game in the first place, did you mean to make a new one with the command '/tic_tac_toe' instead?");
+            }
+        }
+
+        if (event.command.get_command_name() == "coop_tic_tac_toe") {
+            std::string square = std::get<std::string>(event.get_parameter("square"));
+            std::vector<std::string> valid_squares = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+
+            if (std::find(valid_squares.begin(), valid_squares.end(), square) == valid_squares.end()) { // Can't find
+                event.reply("Please choose a valid square from 1 to 9");
+            } else {
+                uint64_t curr_user = event.command.usr.id;
+
+                std::string other_user_str = std::get<std::string>(event.get_parameter("user"));
+                other_user_str = other_user_str.substr(2, other_user_str.length() - 3);
+
+                uint64_t other_user;
+                std::istringstream temp(other_user_str);
+                temp >> other_user;
+
+                if (curr_user < other_user) {
+                    event.reply(coopTicTacToe(std::stoi(square), std::to_string(curr_user) + "_" + std::to_string(other_user) + "_", std::to_string(curr_user), std::to_string(other_user)));
+                } else if (curr_user > other_user) {
+                    event.reply(coopTicTacToe(std::stoi(square), std::to_string(other_user) + "_" + std::to_string(curr_user) + "_", std::to_string(curr_user), std::to_string(other_user)));
+                } else if (curr_user == other_user) {
+                    event.reply("You can't create a multiplayer game with yourself, did you mean to use the command '/tic_tac_toe' instead?");
+                }
+            }
+        }
+
+        if (event.command.get_command_name() == "quit_coop_tic_tac_toe") {
+            uint64_t curr_user = event.command.usr.id;
+
+            std::string other_user_str = std::get<std::string>(event.get_parameter("user"));
+            other_user_str = other_user_str.substr(2, other_user_str.length() - 3);
+
+            uint64_t other_user;
+            std::istringstream temp(other_user_str);
+            temp >> other_user;
+
+            std::string game_prefix;
+
+            if (curr_user < other_user) {
+                game_prefix = std::to_string(curr_user) + "_" + std::to_string(other_user) + "_";
+            } else if (curr_user > other_user) {
+                game_prefix = std::to_string(other_user) + "_" + std::to_string(curr_user) + "_";
+            } else if (curr_user == other_user) {
+                event.reply("You can't create a multiplayer game with yourself, did you mean to use the command '/quit_tic_tac_toe' instead?");
+            }
+
+            if (quitCoopGame(game_prefix)) {
+                event.reply("You successfully quit your Tic-Tac-Toe game!");
+            } else {
+                event.reply("You two don't share a Tic-Tac-Toe game in the first place, did you mean to make a new one with the command '/coop_tic_tac_toe' instead?");
+            }
+        }
+
+        // ======== ZHUYIN ======== // (I will actually make this a serious thing later, but this is for fun)
+        if (event.command.get_command_name() == "zhuyin") {
+            std::string term = std::get<std::string>(event.get_parameter("term"));
+            std::vector<std::string> zhuyinify_arr = zhuyinify(term);
+
+            event.reply(zhuyinify_arr[0]);
+            zhuyinify_arr.erase(zhuyinify_arr.begin());
+
+            while (zhuyinify_arr.size() != 0) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                event.edit_original_response(dpp::message(zhuyinify_arr[0]));
+                zhuyinify_arr.erase(zhuyinify_arr.begin());
+            }
+        }
+
+        if (event.command.get_command_name() == "zhuyin_dictionary") {
+            event.reply(zhuyinDict());
+        }
+
+        // ======== JAPANESE SUPPORT ======== //
 
         // ======== SPOTIFY LINKS ======== //
 
@@ -296,7 +389,7 @@ int main() {
         // ======== EMOJI KITCHEN ======= // (When I'm on my computer for example, I want to access Emoji Kitchen too)
 
         // ======== FORMAT TEXT ======== // (Subscripts, Superscripts, Greek symbols, Math symbols, just made for copy and pasting ease, could be considered a mini text parser)
-
+        
         // ======== TO DO LIST ======== //
 
         // ======== Shun4MIDI ======== //
@@ -365,8 +458,26 @@ int main() {
                 event.reply(list);
             }
 
-            // ======== PLURAL KIT THING FOR MY ACCOUNTS ======== //
+            // ======== CUTLET ======== //
+            if (message.find("/cutlet") == 0 && checkInstance("cutlet_auths.txt", event.msg.author.username)) { // Begins with /cutlet
+                std::string command = "/cutlet";
+                std::string quote = message.substr(command.length() + 1, message.length() - command.length());
+                event.reply(cppCutlet(quote, event.msg.author.username + "_" + std::to_string(event.msg.sent) + "_"));
+            }
 
+            if (message.find("/format_cutlet") == 0 && checkInstance("cutlet_auths.txt", event.msg.author.username)) { // Begins with /format_cutlet
+                std::string command = "/format_cutlet";
+                std::string quote = message.substr(command.length() + 1, message.length() - command.length());
+                event.reply(formatCutlet(quote));
+            }
+
+            if (message.find("/jp_shortcut") == 0 && checkInstance("jp_shortcut_auths.txt", event.msg.author.username)) { // Begins with /jp_shortcut
+                std::string command = "/jp_shortcut";
+                std::string quote = message.substr(command.length() + 1, message.length() - command.length());
+                event.reply(shortcutToJp(quote));
+            }
+
+            // ======== PLURAL KIT THING FOR MY ACCOUNTS ======== //
 
             // ======== Shun4mi(Bot), "Shut up you lil shit" ======== //
             std::transform(message.begin(), message.end(), message.begin(), ::tolower);
@@ -375,7 +486,18 @@ int main() {
             } else if (message.find("shun4mi") != std::string::npos || message.find("shunami") != std::string::npos || message.find("tsunami") != std::string::npos || message.find("tsun4mi") != std::string::npos) {
                 event.reply("I love Shun4mis! :ocean::ocean:", true);
             } else if (message.find("shut up you lil shit") != std::string::npos || message.find("shut up, you lil shit") != std::string::npos) {
-                event.reply(":(", true);
+                dpp::message msg(event.msg.channel_id, "*help mi shun is abusing mi :sob::sob:*");
+                msg.set_reference(event.msg.id);
+
+                bot.message_create(msg, [&bot](const dpp::confirmation_callback_t& callback) {
+                    if (callback.is_error()) return;
+
+                    dpp::message sent_msg = std::get<dpp::message>(callback.value);
+
+                    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+                    sent_msg.set_content(":(");
+                    bot.message_edit(sent_msg);
+                });
             }
         }
     });
@@ -383,7 +505,7 @@ int main() {
     // ======== INIT PART OF THE CODE ======== //
     bot.on_ready([&bot](const dpp::ready_t& event) {
         // Bot status
-        bot.set_presence(dpp::presence(dpp::ps_online, dpp::at_game, "with Shun because I'm NOT held hostage"));
+        bot.set_presence(dpp::presence(dpp::ps_online, dpp::at_game, "Abst Alg at 3 am because of Shun's Algebra addiction"));
 
         if (dpp::run_once<struct register_bot_commands>()) {
             // ======= SHUN TRIVIA ======== //
@@ -431,9 +553,19 @@ int main() {
             bot.global_command_create(dpp::slashcommand("factorial", "Finds the factorial of an integer", bot.me.id).add_option(dpp::command_option(dpp::co_string, "number", "Number to be factorial'ed", true)));
             bot.global_command_create(dpp::slashcommand("log", "Finds the log base one number to the other number", bot.me.id).add_option(dpp::command_option(dpp::co_string, "first_number", "Base of the expression", true)).add_option(dpp::command_option(dpp::command_option(dpp::co_string, "second_number", "Ohter number of the expression", true))));
             bot.global_command_create(dpp::slashcommand("random_int", "Generates a random number between two integers", bot.me.id).add_option(dpp::command_option(dpp::co_string, "lower_bound", "Lower bound", true)).add_option(dpp::command_option(dpp::co_string, "upper_bound", "Upper bound", true)));
-            
-            // ======== JAPANESE SUPPORT ======== // (Mainly like converting words I know from English to Japanese but of course it could be romaji to kanji)
 
+            // ======== TIC TAC TOE ======== //
+            bot.global_command_create(dpp::slashcommand("tic_tac_toe", "Use me to play Tic Tac Toe with another person irl", bot.me.id).add_option(dpp::command_option(dpp::co_string, "square", "The square you choose, counting from 1 to 9 from the top left corner", true)));
+            bot.global_command_create(dpp::slashcommand("quit_tic_tac_toe", "Quit your Tic Tac Toe game", bot.me.id));
+            bot.global_command_create(dpp::slashcommand("coop_tic_tac_toe", "Create a new Tic Tac Toe game with a person in this server", bot.me.id).add_option(dpp::command_option(dpp::co_string, "user", "@The user you want to play with", true)).add_option(dpp::command_option(dpp::co_string, "square", "The square you choose, counting from 1 to 9 from the top left corner", true)));
+            bot.global_command_create(dpp::slashcommand("quit_coop_tic_tac_toe", "Quit your Coop Tic Tac Toe game", bot.me.id).add_option(dpp::command_option(dpp::co_string, "user", "@The user you want to play with", true)));
+            
+            // ======== ZHUYIN ======== // (I will actually make this a serious thing later, but this is for fun)
+            bot.global_command_create(dpp::slashcommand("zhuyin", "[CURRENTLY IS A JOKE FUNCTION WITH A LIMITED DICTIONARY] Converts the input into Zhuyin", bot.me.id).add_option(dpp::command_option(dpp::co_string, "term", "The term to be converted into Zhuyin", true)));
+            bot.global_command_create(dpp::slashcommand("zhuyin_dictionary", "[CURRENTLY IS A JOKE FUNCTION WITH A LIMITED DICTIONARY] Outputs term inputs that Shun's custom Zhuyin dictionary list supports", bot.me.id));
+
+            // ======== JAPANESE SUPPORT ======== // (Mainly like converting words I know from English to Japanese but of course it could be romaji to kanji)
+            
             // ======== SPOTIFY LINKS ======== //
 
             // ======== MISC PHOTOS ======== //
