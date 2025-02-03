@@ -51,3 +51,17 @@ bool checkInstance(std::string file_name, std::string instance, bool in_src) {
     std::vector<std::string> curr_arr = readVector(file_name, in_src);
     return std::find(curr_arr.begin(), curr_arr.end(), instance) != curr_arr.end();
 }
+
+void write(std::string file_name, std::string text, bool in_src) {
+    std::ofstream curr_file(filePath(file_name, in_src));
+    curr_file << text;
+    curr_file.close();
+}
+
+void deleteFile(std::string file_name, bool in_src) {
+    remove(filePath(file_name, in_src).c_str());
+}
+
+bool checkFile(std::string file_name, bool in_src) {
+    return std::filesystem::exists(filePath(file_name, in_src).c_str());
+}
