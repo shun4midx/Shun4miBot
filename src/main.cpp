@@ -536,9 +536,10 @@ int main() {
             // ======= THIS IS FINE ======= //
             std::string this_is_fine_emoji = "<:this_is_fine:1336212781673742408>";
             std::string this_is_fine = ":this_is_fine:";
+            std::string this_is_fine_dpp_emoji = "this_is_fine:1336212781673742408";
 
             if (message.find("this is fine") != std::string::npos && message.find("/bot_say") != 0) {
-                bot.message_add_reaction(event.msg.id, event.msg.channel_id, this_is_fine_emoji);
+                bot.message_add_reaction(event.msg.id, event.msg.channel_id, this_is_fine_dpp_emoji);
                 event.reply("This is fine <:this_is_fine:1336212781673742408>", true);
 
                 dpp::message msg(event.msg.channel_id, "I'm not being abused by Shun at all <:this_is_fine:1336212781673742408>");
@@ -554,7 +555,7 @@ int main() {
             
             if (og_message.find(":this_is_fine:") != std::string::npos && message.find("/bot_say") != 0) {
                 og_message.replace(og_message.find(":this_is_fine:"), this_is_fine.length(), this_is_fine_emoji);
-                bot.message_add_reaction(event.msg.id, event.msg.channel_id, this_is_fine_emoji);
+                bot.message_add_reaction(event.msg.id, event.msg.channel_id, this_is_fine_dpp_emoji);
                 event.reply(og_message, true);
             }
         }
