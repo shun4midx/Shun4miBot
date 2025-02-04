@@ -107,7 +107,9 @@ int main() {
             std::string quote = std::get<std::string>(event.get_parameter("quote"));
             std::string this_is_fine_emoji = "<:this_is_fine:1336212781673742408>";
             std::string this_is_fine = ":this_is_fine:";
-            quote.replace(quote.find(":this_is_fine"), this_is_fine.length(), this_is_fine_emoji);
+            if (quote.find(this_is_fine) != std::string::npos) {
+                quote.replace(quote.find(this_is_fine), this_is_fine.length(), this_is_fine_emoji);
+            }
             event.reply(quote);
         }
 
@@ -430,7 +432,9 @@ int main() {
                 // This is fine
                 std::string this_is_fine_emoji = "<:this_is_fine:1336212781673742408>";
                 std::string this_is_fine = ":this_is_fine:";
-                quote.replace(quote.find(":this_is_fine"), this_is_fine.length(), this_is_fine_emoji);
+                if (quote.find(this_is_fine) != std::string::npos) {
+                    quote.replace(quote.find(this_is_fine), this_is_fine.length(), this_is_fine_emoji);
+                }
 
                 event.send(quote);
             }
