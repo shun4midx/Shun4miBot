@@ -398,19 +398,28 @@ int main() {
 
         if (event.command.get_command_name() == "zhuyin_type" && checkInstance("zhuyin_alpha_auths.txt", event.command.usr.username)) {
             std::string input = std::get<std::string>(event.get_parameter("input"));
-            input = input.substr(0, input.length() - 1);
+            char last_char = input[input.length() - 1];
+            if (last_char != '3'  && last_char != '4' && last_char != '6' && last_char != '7') { // Last tone is a first tone
+                input += ' ';
+            }
             event.reply(zhuyinType(input, event.command.usr.username + "_"));
         }
 
         if (event.command.get_command_name() == "zhuyin_type_precise" && checkInstance("zhuyin_alpha_auths.txt", event.command.usr.username)) {
             std::string input = std::get<std::string>(event.get_parameter("input"));
-            input = input.substr(0, input.length() - 1);
+            char last_char = input[input.length() - 1];
+            if (last_char != '3'  && last_char != '4' && last_char != '6' && last_char != '7') { // Last tone is a first tone
+                input += ' ';
+            }
             event.reply(zhuyinTypePrecise(input, event.command.usr.username + "_"));
         }
 
         if (event.command.get_command_name() == "qwerty_to_zhuyin") {
             std::string input = std::get<std::string>(event.get_parameter("input"));
-            input = input.substr(0, input.length() - 1);
+            char last_char = input[input.length() - 1];
+            if (last_char != '3'  && last_char != '4' && last_char != '6' && last_char != '7') { // Last tone is a first tone
+                input += ' ';
+            }
             event.reply(qwertyToZhuyin(input, event.command.usr.username + "_"));
         }
 
@@ -644,11 +653,13 @@ int main() {
             // ======== ZHUYIN ======== // (I will actually make this a serious thing later, but this is for fun)
             bot.global_command_create(dpp::slashcommand("zhuyin", "[CURRENTLY IS A JOKE FUNCTION WITH A LIMITED DICTIONARY] Converts the input into Zhuyin", bot.me.id).add_option(dpp::command_option(dpp::co_string, "term", "The term to be converted into Zhuyin", true)));
             bot.global_command_create(dpp::slashcommand("zhuyin_dictionary", "[CURRENTLY IS A JOKE FUNCTION WITH A LIMITED DICTIONARY] Outputs term inputs that Shun's custom Zhuyin dictionary list supports", bot.me.id));
-            bot.global_command_create(dpp::slashcommand("zhuyin_type", "Type on your QWERTY keyboard like it is a Zhuyin one to get Traditional Chinese characters", bot.me.id).add_option(dpp::command_option(dpp::co_string, "input",  "Type any non-space character in the end to confirm your input!", true)));
-            bot.global_command_create(dpp::slashcommand("zhuyin_type_precise", "Type on your QWERTY keyboard like Zhuyin to get the most likely characters (max 6) for each sound", bot.me.id).add_option(dpp::command_option(dpp::co_string, "input",  "Type any non-space character in the end to confirm your input!", true)));
-            bot.global_command_create(dpp::slashcommand("qwerty_to_zhuyin", "Type on your QWERTY keyboard like it is a Zhuyin keyboard and press Enter to get your Zhuyin", bot.me.id).add_option(dpp::command_option(dpp::co_string, "input", "Type any non-space character in the end to confirm your input!", true)));
+            bot.global_command_create(dpp::slashcommand("zhuyin_type", "Type on your QWERTY keyboard like it is a Zhuyin one to get Traditional Chinese characters", bot.me.id).add_option(dpp::command_option(dpp::co_string, "input",  "Remember to confirm your input by pressing Enter!", true)));
+            bot.global_command_create(dpp::slashcommand("zhuyin_type_precise", "Type on your QWERTY keyboard like Zhuyin to get the most likely characters (max 6) for each sound", bot.me.id).add_option(dpp::command_option(dpp::co_string, "input",  "Remember to confirm your input by pressing Enter!", true)));
+            bot.global_command_create(dpp::slashcommand("qwerty_to_zhuyin", "Type on your QWERTY keyboard like it is a Zhuyin keyboard and press Enter to get your Zhuyin", bot.me.id).add_option(dpp::command_option(dpp::co_string, "input", "Remember to confirm your input by pressing Enter!", true)));
 
             // ======== JAPANESE SUPPORT ======== // (Mainly like converting words I know from English to Japanese but of course it could be romaji to kanji)
+            
+            // ======== TO DO LIST ======== // (Displayed in order 1, 2, 3, ... on the side to indicate which task)
             
             // ======== SPOTIFY LINKS ======== //
 
@@ -657,8 +668,6 @@ int main() {
             // ======== EMOJI KITCHEN ======= // (When I'm on my computer for example, I want to access Emoji Kitchen too)
 
             // ======== FORMAT TEXT ======== // (Subscripts, Superscripts, Greek symbols, Math symbols, just made for copy and pasting ease, could be considered a mini text parser)
-
-            // ======== TO DO LIST ======== //
 
             // ======== Shun4MIDI ======== //
         }
