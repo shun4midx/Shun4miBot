@@ -72,6 +72,10 @@ int main() {
             event.reply("```\nbool stoneGame(vector<int>& piles) {\n    return true;\n}\n```");
         }
 
+        if (event.command.get_command_name() == "this_is_fine") {
+            event.reply("<:this_is_fine:1336212781673742408>");
+        }
+
         // ======== PROGRAMMING AID ======== //
         if (event.command.get_command_name() == "c_includes") {
             event.reply("#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n#include <string.h>\n#include <math.h>");
@@ -383,12 +387,12 @@ int main() {
             event.reply(zhuyinDict());
         }
 
-        if (event.command.get_command_name() == "zhuyin_type") {
+        if (event.command.get_command_name() == "zhuyin_type" && checkInstance("zhuyin_alpha_auths.txt", event.command.usr.username)) {
             std::string input = std::get<std::string>(event.get_parameter("input"));
             event.reply(zhuyinType(input));
         }
 
-        if (event.command.get_command_name() == "qwerty_to_zhuyin") {
+        if (event.command.get_command_name() == "qwerty_to_zhuyin" && checkInstance("zhuyin_alpha_auths.txt", event.command.usr.username)) {
             std::string input = std::get<std::string>(event.get_parameter("input"));
             event.reply(qwertyToZhuyin(input));
         }
@@ -541,6 +545,7 @@ int main() {
             bot.global_command_create(dpp::slashcommand("do_i_speak_japanese", "Do I speak Japanese?", bot.me.id));
             bot.global_command_create(dpp::slashcommand("do_i_speak_mandarin", "Do I speak Mandarin?", bot.me.id));
             bot.global_command_create(dpp::slashcommand("leetcode_stone_game_ans", "Returns the answer to LeetCode Question 877, i.e. 'Stone Game'", bot.me.id));
+            bot.global_command_create(dpp::slashcommand("this_is_fine", "This is fine", bot.me.id));
 
             // ======= PROGRAMMING AID ======= //
             bot.global_command_create(dpp::slashcommand("c_includes", "What Shun includes in the beginning of a C program", bot.me.id));
