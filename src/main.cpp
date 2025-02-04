@@ -383,6 +383,16 @@ int main() {
             event.reply(zhuyinDict());
         }
 
+        if (event.command.get_command_name() == "zhuyin_type") {
+            std::string input = std::get<std::string>(event.get_parameter("input"));
+            event.reply(zhuyinType(input));
+        }
+
+        if (event.command.get_command_name() == "qwerty_to_zhuyin") {
+            std::string input = std::get<std::string>(event.get_parameter("input"));
+            event.reply(qwertyToZhuyin(input));
+        }
+
         // ======== JAPANESE SUPPORT ======== //
 
         // ======== SPOTIFY LINKS ======== //
@@ -501,6 +511,15 @@ int main() {
                     sent_msg.set_content(":(");
                     bot.message_edit(sent_msg);
                 });
+            } else if (message.find("shun for midex") != std::string::npos) {
+                event.reply("Fuck you");
+                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🇺");
+                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🇴");
+                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🇾");
+                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🇰");
+                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🇨");
+                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🇫");
+                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🖕");
             }
         }
     });
@@ -567,6 +586,8 @@ int main() {
             // ======== ZHUYIN ======== // (I will actually make this a serious thing later, but this is for fun)
             bot.global_command_create(dpp::slashcommand("zhuyin", "[CURRENTLY IS A JOKE FUNCTION WITH A LIMITED DICTIONARY] Converts the input into Zhuyin", bot.me.id).add_option(dpp::command_option(dpp::co_string, "term", "The term to be converted into Zhuyin", true)));
             bot.global_command_create(dpp::slashcommand("zhuyin_dictionary", "[CURRENTLY IS A JOKE FUNCTION WITH A LIMITED DICTIONARY] Outputs term inputs that Shun's custom Zhuyin dictionary list supports", bot.me.id));
+            bot.global_command_create(dpp::slashcommand("zhuyin_type", "Type on your QWERTY keyboard like it is a Zhuyin keyboard and press Enter to get the corresponding Traditional Chinese characters", bot.me.id).add_option(dpp::command_option(dpp::co_string, "input", "The input to be converted into Traditional Chinese characters", true)));
+            bot.global_command_create(dpp::slashcommand("qwerty_to_zhuyin", "Type on your QWERTY keyboard like it is a Zhuyin keyboard and press Enter to get your resulting Zhuyin", bot.me.id).add_option(dpp::command_option(dpp::co_string, "input", "The input to be converted into Zhuyin", true)));
 
             // ======== JAPANESE SUPPORT ======== // (Mainly like converting words I know from English to Japanese but of course it could be romaji to kanji)
             

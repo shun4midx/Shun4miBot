@@ -56,3 +56,35 @@ std::string zhuyinifyString(std::string str) {
 std::string zhuyinDict() {
     return read("zhuyin/zhuyin_custom_dict_list.txt");
 }
+
+std::string zhuyinType(std::string input) {
+    if (input == "vu;6c93") {
+        return "翔海";
+    } else if (input == "du; ") {
+        return "ㄎㄧㄤ";
+    } else if (input == "u03nj04z83") {
+        return "演算法";
+    } else if (input == "ru.4ru.4ji3") {
+        return "救救我";
+    } else if (input == "ru.4au/4") {
+        return "救命";
+    } else {
+        return "Sorry, Shun hasn't added this word to the dictionary yet";
+    }
+}
+
+std::string qwertyToZhuyin(std::string input) {
+    if (input == "vu;6c93") {
+        return "ㄒㄧㄤˊ  ㄏㄞˇ";
+    } else if (input == "du; ") {
+        return "ㄎㄧㄤ";
+    } else if (input == "u03nj04z83") {
+        return "ㄧㄢˇ  ㄙㄨㄢˋ  ㄈㄚˇ";
+    } else if (input == "ru.4ru.4ji3") {
+        return "ㄐㄧㄡˋ  ㄐㄧㄡˋ  ㄨㄛˇ";
+    } else if (input == "ru.4au/4") {
+        return "ㄐㄧㄡˋ  ㄇㄧㄥˋ";
+    } else {
+        return "Sorry, Shun hasn't added this word to the dictionary yet";
+    }
+}
