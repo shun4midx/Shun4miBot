@@ -11,6 +11,7 @@
 #include "zhuyin.h"
 #include "../file_manager/file_manager.h"
 
+// ======== MAIN FUNCTIONS ======= //
 // Disclaimer: This is so far just a joke thing, please don't take it seriously
 std::vector<std::string> zhuyinify(std::string str) {
     std::unordered_map<std::string, std::vector<std::string>> ZHUYIN_DICT = {
@@ -57,7 +58,7 @@ std::string zhuyinDict() {
     return read("zhuyin/zhuyin_custom_dict_list.txt");
 }
 
-std::string zhuyinType(std::string input) {
+std::string zhuyinType(std::string input, std::string file_prefix) {
     if (input == "vu;6c93") {
         return "翔海";
     } else if (input == "du; ") {
@@ -73,18 +74,84 @@ std::string zhuyinType(std::string input) {
     }
 }
 
-std::string qwertyToZhuyin(std::string input) {
-    if (input == "vu;6c93") {
-        return "ㄒㄧㄤˊ  ㄏㄞˇ";
-    } else if (input == "du; ") {
-        return "ㄎㄧㄤ";
-    } else if (input == "u03nj04z83") {
-        return "ㄧㄢˇ  ㄙㄨㄢˋ  ㄈㄚˇ";
-    } else if (input == "ru.4ru.4ji3") {
-        return "ㄐㄧㄡˋ  ㄐㄧㄡˋ  ㄨㄛˇ";
-    } else if (input == "ru.4au/4") {
-        return "ㄐㄧㄡˋ  ㄇㄧㄥˋ";
-    } else {
-        return "Sorry, Shun hasn't added this word to the dictionary yet";
+std::string zhuyinTypePrecise(std::string input, std::string file_prefix) {
+    // First convert and parse the Zhuyin
+    std::string text_file = "zhuyin/generated_files/" + file_prefix + "zhuyin_precise.txt";
+    std::string text_path = filePath(text_file);
+    std::system(("tobopomo -b '" + input + "'" + " > " + text_path).c_str()); // Call to convert from input to command
+    std::ifstream in(text_path);
+
+    std::vector<std::string> zhuyin_arr = parseTobopomo(read(text_file));
+    write(text_file, "");
+
+    // Secondly get the precise output
+    std::string output = "";
+    for (int i = 0; i < zhuyin_arr.size(); i++) {
+        std::system(("tobopomo -k '" + zhuyin_arr[i] + "' -l 6 > " + text_path).c_str());
+        std::ifstream in(text_path);
+
+        output += read(text_file);
+
+        if (i != zhuyin_arr.size() - 1) {
+            output += "\n";
+        }
     }
+
+    deleteFile(text_file); // Delete file
+
+    return output;
+}
+
+std::string qwertyToZhuyin(std::string input, std::string file_prefix) {
+    std::string text_file = "zhuyin/generated_files/" + file_prefix + "qwerty_to_zhuyin.txt";
+    std::string text_path = filePath(text_file);
+    std::system(("tobopomo -b '" + input + "'" + " > " + text_path).c_str()); // Call to convert from input to command
+    std::ifstream in(text_path);
+
+    std::string output = printBopomo(parseTobopomo(read(text_file)));
+    deleteFile(text_file); // Delete file
+
+    return output;
+}
+
+// ======== USEFUL FUNCTIONS ======= //
+std::vector<std::string> parseTobopomo(std::string str) {
+    // Test Empty
+    if (str == "[]" || str.length() == 0) {
+        return {};
+    }
+
+    // Nonempty
+    // Turns str in the form ['', '', ...] into a vector of those terms
+    std::vector<std::string> str_arr;
+    std::string temp = "";
+
+    int char_idx = 2;
+    while (char_idx < str.length()) {
+        if (str[char_idx] != '\'' && str[char_idx] != ',' && str[char_idx] != ' ') {
+            temp += str[char_idx];
+        } else if (str[char_idx] == '\'') {
+            if (temp != "") {
+                str_arr.push_back(temp);
+                temp = "";
+            }
+        }
+        char_idx++;
+    }
+
+    return str_arr;
+}
+
+std::string printBopomo(std::vector<std::string> arr) {
+    std::string output = "";
+
+    for (int i = 0; i < arr.size(); i++) {
+        output += arr[i];
+
+        if (i != arr.size() - 1) {
+            output += "  ";
+        }
+    }
+
+    return output;
 }

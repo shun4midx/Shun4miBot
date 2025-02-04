@@ -45,6 +45,10 @@ int main() {
             event.reply("Shun4MIDI Music Tool (shun4midi_en, shun4midi_jp)\nShun4miBot\nPossible Shun4MIDI bot too");
         }
 
+        if (event.command.get_command_name() == "shun_pronouns") {
+            event.reply("He/Him, or whatever that equivalent is in another language, except for Japanese.\n\nIn Japanese, Shun uses *boku* instead of *ore* in casual contexts but uses ボク instead of 僕 or ぼく due to personal reasons, so please quote him with ボク when using Japanese! If it's not allowed out of formality of a text, please modify his quote to say 自分 instead.\n\nFor example, when Shun refers to the Yorushika song 'That's why I gave up on Music' in a personal context relating to himself, he usually would write だからボクは音楽を辞めた instead, but if that's not allowed in a text due to formality, he would reference the song but modify it to match his personal context by saying だから自分は音楽をやめった!");
+        }
+
         // ======== Shun4miBot QUIRKS ======= //
         if (event.command.get_command_name() == "best_programming_language") {
             event.reply("C++!");
@@ -394,12 +398,20 @@ int main() {
 
         if (event.command.get_command_name() == "zhuyin_type" && checkInstance("zhuyin_alpha_auths.txt", event.command.usr.username)) {
             std::string input = std::get<std::string>(event.get_parameter("input"));
-            event.reply(zhuyinType(input));
+            input = input.substr(0, input.length() - 1);
+            event.reply(zhuyinType(input, event.command.usr.username + "_"));
         }
 
-        if (event.command.get_command_name() == "qwerty_to_zhuyin" && checkInstance("zhuyin_alpha_auths.txt", event.command.usr.username)) {
+        if (event.command.get_command_name() == "zhuyin_type_precise" && checkInstance("zhuyin_alpha_auths.txt", event.command.usr.username)) {
             std::string input = std::get<std::string>(event.get_parameter("input"));
-            event.reply(qwertyToZhuyin(input));
+            input = input.substr(0, input.length() - 1);
+            event.reply(zhuyinTypePrecise(input, event.command.usr.username + "_"));
+        }
+
+        if (event.command.get_command_name() == "qwerty_to_zhuyin") {
+            std::string input = std::get<std::string>(event.get_parameter("input"));
+            input = input.substr(0, input.length() - 1);
+            event.reply(qwertyToZhuyin(input, event.command.usr.username + "_"));
         }
 
         // ======== JAPANESE SUPPORT ======== //
@@ -571,12 +583,13 @@ int main() {
     // ======== INIT PART OF THE CODE ======== //
     bot.on_ready([&bot](const dpp::ready_t& event) {
         // Bot status
-        bot.set_presence(dpp::presence(dpp::ps_online, dpp::at_game, "Abst Alg at 3 am because of Shun's Algebra addiction"));
+        bot.set_presence(dpp::presence(dpp::ps_idle, dpp::at_game, "Abst Alg at 3 am because of Shun's Algebra addiction"));
 
         if (dpp::run_once<struct register_bot_commands>()) {
             // ======= SHUN TRIVIA ======== //
             bot.global_command_create(dpp::slashcommand("shun_names", "Outputs all forms of Shun's names", bot.me.id));
             bot.global_command_create(dpp::slashcommand("shun_projects", "Outputs all forms of Shun's current projects", bot.me.id));
+            bot.global_command_create(dpp::slashcommand("shun_pronouns", "What are Shun's pronouns?", bot.me.id));
 
             // ======== Shun4miBot QUIRKS ======= //
             bot.global_command_create(dpp::slashcommand("best_programming_language", "What is the best programming language?", bot.me.id));
@@ -631,8 +644,9 @@ int main() {
             // ======== ZHUYIN ======== // (I will actually make this a serious thing later, but this is for fun)
             bot.global_command_create(dpp::slashcommand("zhuyin", "[CURRENTLY IS A JOKE FUNCTION WITH A LIMITED DICTIONARY] Converts the input into Zhuyin", bot.me.id).add_option(dpp::command_option(dpp::co_string, "term", "The term to be converted into Zhuyin", true)));
             bot.global_command_create(dpp::slashcommand("zhuyin_dictionary", "[CURRENTLY IS A JOKE FUNCTION WITH A LIMITED DICTIONARY] Outputs term inputs that Shun's custom Zhuyin dictionary list supports", bot.me.id));
-            bot.global_command_create(dpp::slashcommand("zhuyin_type", "Type on your QWERTY keyboard like it is a Zhuyin keyboard and press Enter to get the corresponding Traditional Chinese characters", bot.me.id).add_option(dpp::command_option(dpp::co_string, "input", "The input to be converted into Traditional Chinese characters", true)));
-            bot.global_command_create(dpp::slashcommand("qwerty_to_zhuyin", "Type on your QWERTY keyboard like it is a Zhuyin keyboard and press Enter to get your resulting Zhuyin", bot.me.id).add_option(dpp::command_option(dpp::co_string, "input", "The input to be converted into Zhuyin", true)));
+            bot.global_command_create(dpp::slashcommand("zhuyin_type", "Type on your QWERTY keyboard like it is a Zhuyin one to get Traditional Chinese characters", bot.me.id).add_option(dpp::command_option(dpp::co_string, "input",  "Type any non-space character in the end to confirm your input!", true)));
+            bot.global_command_create(dpp::slashcommand("zhuyin_type_precise", "Type on your QWERTY keyboard like Zhuyin to get the most likely characters (max 6) for each sound", bot.me.id).add_option(dpp::command_option(dpp::co_string, "input",  "Type any non-space character in the end to confirm your input!", true)));
+            bot.global_command_create(dpp::slashcommand("qwerty_to_zhuyin", "Type on your QWERTY keyboard like it is a Zhuyin keyboard and press Enter to get your Zhuyin", bot.me.id).add_option(dpp::command_option(dpp::co_string, "input", "Type any non-space character in the end to confirm your input!", true)));
 
             // ======== JAPANESE SUPPORT ======== // (Mainly like converting words I know from English to Japanese but of course it could be romaji to kanji)
             
