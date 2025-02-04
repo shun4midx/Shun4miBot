@@ -19,7 +19,6 @@
 #include <dpp/message.h>
 #include <dpp/user.h>
 #include <dpp/cluster.h>
-#include <dpp/dispatcher.h>
 #include "parsing/parsing.h"
 #include "spinner/spinner.h"
 #include "shuffle/shuffle.h"
@@ -68,6 +67,10 @@ int main() {
         if (event.command.get_command_name() == "do_i_speak_mandarin") {
             event.reply("ㄨㄛˇ ㄅㄨˊ ㄏㄨㄟˋ ㄕㄨㄛ ㄓㄨㄥ ㄨㄣˊ（ㄎㄨ ㄎㄨ\n*沒有啦 開玩笑啦 我會啦 只是很爛而已* :clown:");
         } 
+
+        if (event.command.get_command_name() == "leetcode_stone_game_ans") {
+            event.reply("```\nbool stoneGame(vector<int>& piles) {\n    return true;\n}\n```");
+        }
 
         // ======== PROGRAMMING AID ======== //
         if (event.command.get_command_name() == "c_includes") {
@@ -518,6 +521,7 @@ int main() {
             bot.global_command_create(dpp::slashcommand("is_shun_good", "Is Shun good?", bot.me.id));
             bot.global_command_create(dpp::slashcommand("do_i_speak_japanese", "Do I speak Japanese?", bot.me.id));
             bot.global_command_create(dpp::slashcommand("do_i_speak_mandarin", "Do I speak Mandarin?", bot.me.id));
+            bot.global_command_create(dpp::slashcommand("leetcode_stone_game_ans", "Returns the answer to LeetCode Question 877, i.e. 'Stone Game'", bot.me.id));
 
             // ======= PROGRAMMING AID ======= //
             bot.global_command_create(dpp::slashcommand("c_includes", "What Shun includes in the beginning of a C program", bot.me.id));
