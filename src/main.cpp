@@ -423,6 +423,12 @@ int main() {
                 std::string command = "/bot_say";
                 std::string quote = message.substr(command.length() + 1, message.length() - command.length());
                 bot.message_delete(event.msg.id, event.msg.channel_id);
+
+                // This is fine
+                std::string this_is_fine_emoji = "<:this_is_fine:1336212781673742408>";
+                std::string this_is_fine = ":this_is_fine:";
+                quote.replace(quote.find(":this_is_fine"), this_is_fine.length(), this_is_fine_emoji);
+
                 event.send(quote);
             }
 
@@ -497,8 +503,18 @@ int main() {
             // ======== PLURAL KIT THING FOR MY ACCOUNTS ======== //
 
             // ======== Shun4mi(Bot), "Shut up you lil shit" ======== //
+            std::string og_message = message;
             std::transform(message.begin(), message.end(), message.begin(), ::tolower);
-            if (message.find("shun4mibot") != std::string::npos || ((message.find("my bot") != std::string::npos || message.find("my discord bot") != std::string::npos) && event.msg.author.username == "shun4midx")) {
+            if (message.find("shun for midex") != std::string::npos) {
+                event.reply("Fuck you");
+                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🇺");
+                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🇴");
+                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🇾");
+                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🇰");
+                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🇨");
+                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🇫");
+                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🖕");
+            } else if (message.find("shun4mibot") != std::string::npos || ((message.find("my bot") != std::string::npos || message.find("my discord bot") != std::string::npos) && event.msg.author.username == "shun4midx")) {
                 event.reply("Omg me mention! I love Shun4mis :D :ocean::ocean:", true);
             } else if (message.find("shun4mi") != std::string::npos || message.find("shunami") != std::string::npos || message.find("tsunami") != std::string::npos || message.find("tsun4mi") != std::string::npos) {
                 event.reply("I love Shun4mis! :ocean::ocean:", true);
@@ -515,15 +531,31 @@ int main() {
                     sent_msg.set_content(":(");
                     bot.message_edit(sent_msg);
                 });
-            } else if (message.find("shun for midex") != std::string::npos) {
-                event.reply("Fuck you");
-                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🇺");
-                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🇴");
-                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🇾");
-                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🇰");
-                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🇨");
-                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🇫");
-                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🖕");
+            }
+
+            // ======= THIS IS FINE ======= //
+            std::string this_is_fine_emoji = "<:this_is_fine:1336212781673742408>";
+            std::string this_is_fine = ":this_is_fine:";
+
+            if (message.find("this is fine") != std::string::npos && message.find("/bot_say") != 0) {
+                bot.message_add_reaction(event.msg.id, event.msg.channel_id, this_is_fine_emoji);
+                event.reply("This is fine <:this_is_fine:1336212781673742408>", true);
+
+                dpp::message msg(event.msg.channel_id, "I'm not being abused by Shun at all <:this_is_fine:1336212781673742408>");
+                bot.message_create(msg, [&bot](const dpp::confirmation_callback_t& callback) {
+                    if (callback.is_error()) return;
+
+                    dpp::message sent_msg = std::get<dpp::message>(callback.value);
+
+                    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+                    bot.message_delete(sent_msg.id, sent_msg.channel_id);
+                });
+            }
+            
+            if (og_message.find(":this_is_fine:") != std::string::npos && message.find("/bot_say") != 0) {
+                og_message.replace(og_message.find(":this_is_fine:"), this_is_fine.length(), this_is_fine_emoji);
+                bot.message_add_reaction(event.msg.id, event.msg.channel_id, this_is_fine_emoji);
+                event.reply(og_message, true);
             }
         }
     });
