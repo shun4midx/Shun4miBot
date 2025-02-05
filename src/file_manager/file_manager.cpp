@@ -33,6 +33,19 @@ std::string read(std::string file_name, bool in_src) {
     return curr_text;
 }
 
+std::string readSingleLine(std::string file_name, bool in_src) {
+    std::ifstream curr_file(filePath(file_name, in_src));
+    std::string curr_text = "";
+    std::string text_line = "";
+
+    getline(curr_file, text_line);
+    curr_text = curr_text + (curr_text == "" ? "" : "\n") + text_line;
+    
+    curr_file.close();
+
+    return curr_text;
+}
+
 std::vector<std::string> readVector(std::string file_name, bool in_src) {
     std::ifstream curr_file(filePath(file_name, in_src));
     std::vector<std::string> curr_arr;

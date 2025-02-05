@@ -13,6 +13,7 @@
 
 std::string filePath(std::string file_name, bool in_src = false); // Returns file path given file_name and in_src
 std::string read(std::string file_name, bool in_src = false); // Reads a txt file and returns it, in_src is if it is in /src
+std::string readSingleLine(std::string file_name, bool in_src = false); // Reads the first line of a txt file and returns it, in_src is if it is in /src
 std::vector<std::string> readVector(std::string file_name, bool in_src = false); // Reads a txt file and returns it as a vector
 bool checkInstance(std::string file_name, std::string instance, bool in_src = false); // Checks for if there's a line containing instance
 

@@ -82,6 +82,9 @@ std::string zhuyinTypePrecise(std::string input, std::string file_prefix) {
     std::ifstream in(text_path);
 
     std::vector<std::string> zhuyin_arr = parseTobopomo(read(text_file));
+    for (std::string str : zhuyin_arr) {
+        std::cout << str << std::endl;
+    }
     write(text_file, "");
 
     // Secondly get the precise output
@@ -90,7 +93,7 @@ std::string zhuyinTypePrecise(std::string input, std::string file_prefix) {
         std::system(("tobopomo -k '" + zhuyin_arr[i] + "' -l 6 > " + text_path).c_str());
         std::ifstream in(text_path);
 
-        output += read(text_file);
+        output += readSingleLine(text_file);
 
         if (i != zhuyin_arr.size() - 1) {
             output += "\n";
@@ -137,6 +140,12 @@ std::vector<std::string> parseTobopomo(std::string str) {
             }
         }
         char_idx++;
+    }
+
+    for (int i = 0; i < str_arr.size(); i++) {
+        if (str_arr[i] == " " || str_arr[i] == "" || str_arr[i] == "\n") {
+            str_arr.erase(i + str_arr.begin());
+        }
     }
 
     return str_arr;

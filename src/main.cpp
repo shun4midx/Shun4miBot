@@ -26,6 +26,7 @@
 #include "japanese/japanese.h"
 #include "tic_tac_toe/tic_tac_toe.h"
 #include "zhuyin/zhuyin.h"
+#include "to_do/to_do.h"
 
 int main() {
     std::srand(unsigned(time(NULL)));
@@ -425,6 +426,35 @@ int main() {
 
         // ======== JAPANESE SUPPORT ======== //
 
+        // ======== TO DO LIST ======== //
+        if (event.command.get_command_name() == "new_list") {
+
+        }
+
+        if (event.command.get_command_name() == "delete_list") {
+            
+        }
+
+        if (event.command.get_command_name() == "new_task") {
+            
+        }
+
+        if (event.command.get_command_name() == "delete_task") {
+            
+        }
+
+        if (event.command.get_command_name() == "swap_priorities") {
+            
+        }
+
+        if (event.command.get_command_name() == "bump_prioritiy") {
+            
+        }
+
+        if (event.command.get_command_name() == "all_lists") {
+            
+        }
+        
         // ======== SPOTIFY LINKS ======== //
 
         // ======== MISC PHOTOS ======== //
@@ -433,8 +463,6 @@ int main() {
 
         // ======== FORMAT TEXT ======== // (Subscripts, Superscripts, Greek symbols, Math symbols, just made for copy and pasting ease, could be considered a mini text parser)
         
-        // ======== TO DO LIST ======== //
-
         // ======== Shun4MIDI ======== //
     });
 
@@ -656,11 +684,17 @@ int main() {
             bot.global_command_create(dpp::slashcommand("zhuyin_type", "Type on your QWERTY keyboard like it is a Zhuyin one to get Traditional Chinese characters", bot.me.id).add_option(dpp::command_option(dpp::co_string, "input",  "Remember to confirm your input by pressing Enter!", true)));
             bot.global_command_create(dpp::slashcommand("zhuyin_type_precise", "Type on your QWERTY keyboard like Zhuyin to get the most likely characters (max 6) for each sound", bot.me.id).add_option(dpp::command_option(dpp::co_string, "input",  "Remember to confirm your input by pressing Enter!", true)));
             bot.global_command_create(dpp::slashcommand("qwerty_to_zhuyin", "Type on your QWERTY keyboard like it is a Zhuyin keyboard and press Enter to get your Zhuyin", bot.me.id).add_option(dpp::command_option(dpp::co_string, "input", "Remember to confirm your input by pressing Enter!", true)));
-
             // ======== JAPANESE SUPPORT ======== // (Mainly like converting words I know from English to Japanese but of course it could be romaji to kanji)
             
             // ======== TO DO LIST ======== // (Displayed in order 1, 2, 3, ... on the side to indicate which task)
-            
+            bot.global_command_create(dpp::slashcommand("new_list", "Creates a new to-do list", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List")));
+            bot.global_command_create(dpp::slashcommand("delete_list", "Deletes a to-do list", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List")));
+            bot.global_command_create(dpp::slashcommand("new_task", "Creates a new task in a to-do list", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List")).add_option(dpp::command_option(dpp::co_string, "task_name", "Name of said task")));
+            bot.global_command_create(dpp::slashcommand("delete_task", "Delets a task in a to-do list", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List")).add_option(dpp::command_option(dpp::co_string, "task_name", "Name of said task")));
+            bot.global_command_create(dpp::slashcommand("swap_priorities", "Swaps two priorities in a to-do list", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List")).add_option(dpp::command_option(dpp::co_string, "task_priority1", "Priority of one task")).add_option(dpp::command_option(dpp::co_string, "task_priority2", "Priority of another task")));
+            bot.global_command_create(dpp::slashcommand("bump_prioritiy", "Makes a task in a to-do list have a new priority", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List")).add_option(dpp::command_option(dpp::co_string, "task_priority", "Priority of said task")).add_option(dpp::command_option(dpp::co_string, "new_priority", "New priority you want this task to have")));
+            bot.global_command_create(dpp::slashcommand("all_lists", "Lists out all names of to-do lists said user has", bot.me.id));
+
             // ======== SPOTIFY LINKS ======== //
 
             // ======== MISC PHOTOS ======== //
