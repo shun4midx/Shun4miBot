@@ -647,7 +647,6 @@ int main() {
         bot.set_presence(dpp::presence(dpp::ps_idle, dpp::at_game, "Abst Alg at 3 am because of Shun's Algebra addiction"));
 
         if (dpp::run_once<struct register_bot_commands>()) {
-            /*
             // ======= SHUN TRIVIA ======== //
             bot.global_command_create(dpp::slashcommand("shun_names", "Outputs all forms of Shun's names", bot.me.id));
             bot.global_command_create(dpp::slashcommand("shun_projects", "Outputs all forms of Shun's current projects", bot.me.id));
@@ -721,7 +720,6 @@ int main() {
             bot.global_command_create(dpp::slashcommand("swap_priorities", "Swaps two priorities in a to-do list", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List", true)).add_option(dpp::command_option(dpp::co_string, "task_priority1", "Priority of one task", true)).add_option(dpp::command_option(dpp::co_string, "task_priority2", "Priority of another task", true)));
             bot.global_command_create(dpp::slashcommand("bump_prioritiy", "Makes a task in a to-do list have a new priority", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List", true)).add_option(dpp::command_option(dpp::co_string, "task_priority", "Priority of said task", true)).add_option(dpp::command_option(dpp::co_string, "new_priority", "New priority you want this task to have", true)));
             bot.global_command_create(dpp::slashcommand("all_lists", "Lists out all names of to-do lists said user has", bot.me.id));
-            */
             bot.global_command_create(dpp::slashcommand("view_list", "Views an existing new to-do list", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List", true)));
 
             // ======== SPOTIFY LINKS ======== //
