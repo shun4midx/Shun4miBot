@@ -35,58 +35,40 @@ int main() {
  
     // Main Program
     bot.on_log(dpp::utility::cout_logger());
-
+    
     bot.on_slashcommand([](const dpp::slashcommand_t& event) {
         // ======== SHUN TRIVIA ======= //
         if (event.command.get_command_name() == "shun_names") {
             event.reply("Shun\n翔海\nShun/翔海\nしゅう\nしゅん\nShun4mi");
-        }
-
-        if (event.command.get_command_name() == "shun_projects") {
+        } else if (event.command.get_command_name() == "shun_projects") {
             event.reply("Shun4MIDI Music Tool (shun4midi_en, shun4midi_jp)\nShun4miBot\nPossible Shun4MIDI bot too");
-        }
-
-        if (event.command.get_command_name() == "shun_pronouns") {
+        } else if (event.command.get_command_name() == "shun_pronouns") {
             event.reply("He/Him, or whatever that equivalent is in another language, except for Japanese.\n\nIn Japanese, Shun uses *boku* instead of *ore* in casual contexts but uses ボク instead of 僕 or ぼく due to personal reasons, so please quote him with ボク when using Japanese! If it's not allowed out of formality of a text, please modify his quote to say 自分 instead.\n\nFor example, when Shun refers to the Yorushika song 'That's why I gave up on Music' in a personal context relating to himself, he usually would write だからボクは音楽を辞めた instead, but if that's not allowed in a text due to formality, he would reference the song but modify it to match his personal context by saying だから自分は音楽をやめった!");
         }
 
         // ======== Shun4miBot QUIRKS ======= //
         if (event.command.get_command_name() == "best_programming_language") {
             event.reply("C++!");
-        } 
-
-        if (event.command.get_command_name() == "is_cpp_good") {
+        } else if (event.command.get_command_name() == "is_cpp_good") {
             event.reply("Yes!");
-        } 
-
-        if (event.command.get_command_name() == "is_shun_good") {
+        } else if (event.command.get_command_name() == "is_shun_good") {
             event.reply("Yes! *(i was forced to say that, no hes not, im held hostage by him, im scared, pls let me free)*");
             std::this_thread::sleep_for(std::chrono::milliseconds(1000));
             event.edit_original_response(dpp::message("Yes! Of course! :D"));
-        }
-
-        if (event.command.get_command_name() == "do_i_speak_japanese") {
+        } else if (event.command.get_command_name() == "do_i_speak_japanese") {
             event.reply("ええ、ボクは日本語を話すよ！");
-        } 
-
-        if (event.command.get_command_name() == "do_i_speak_mandarin") {
+        } else if (event.command.get_command_name() == "do_i_speak_mandarin") {
             event.reply("ㄨㄛˇ ㄅㄨˊ ㄏㄨㄟˋ ㄕㄨㄛ ㄓㄨㄥ ㄨㄣˊ（ㄎㄨ ㄎㄨ\n*沒有啦 開玩笑啦 我會啦 只是很爛而已* :clown:");
-        } 
-
-        if (event.command.get_command_name() == "leetcode_stone_game_ans") {
+        } else if (event.command.get_command_name() == "leetcode_stone_game_ans") {
             event.reply("```\nbool stoneGame(vector<int>& piles) {\n    return true;\n}\n```");
-        }
-
-        if (event.command.get_command_name() == "this_is_fine") {
+        } else if (event.command.get_command_name() == "this_is_fine") {
             event.reply("<:this_is_fine:1336212781673742408>");
         }
 
         // ======== PROGRAMMING AID ======== //
         if (event.command.get_command_name() == "c_includes") {
             event.reply("#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n#include <string.h>\n#include <math.h>");
-        }
-        
-        if (event.command.get_command_name() == "cpp_includes") {
+        } else if (event.command.get_command_name() == "cpp_includes") {
             event.reply("#include <iostream>\n#include <vector>\n#include <string>\n#include <cmath>");
         } 
 
@@ -106,9 +88,7 @@ int main() {
             }
 
             event.reply("Hey there, **" + event.command.usr.global_name + " (" + full_username + ")**" + "!");
-        }
-
-        if (event.command.get_command_name() == "say") {
+        } else if (event.command.get_command_name() == "say") {
             std::string quote = std::get<std::string>(event.get_parameter("quote"));
             std::string this_is_fine_emoji = "<:this_is_fine:1336212781673742408>";
             std::string this_is_fine = ":this_is_fine:";
@@ -165,9 +145,7 @@ int main() {
                 );
             dpp::message final_message(event.command.channel_id, final_choice);
             event.edit_original_response(final_message);
-        }
-
-        if (event.command.get_command_name() == "shuffle" || event.command.get_command_name() == "shuffle_alt" || event.command.get_command_name() == "shuffle_separator") {
+        } else if (event.command.get_command_name() == "shuffle" || event.command.get_command_name() == "shuffle_alt" || event.command.get_command_name() == "shuffle_separator") {
         // ======== SHUFFLE ======== //
             std::string list = std::get<std::string>(event.get_parameter("list"));
             std::string parsed_list, shuffled_list;
@@ -315,17 +293,13 @@ int main() {
             } else {
                 event.reply("Please choose a valid square from 1 to 9");
             }
-        }
-
-        if (event.command.get_command_name() == "quit_tic_tac_toe") {
+        } else if (event.command.get_command_name() == "quit_tic_tac_toe") {
             if (quitGame(event.command.usr.username + "_")) {
                 event.reply("You successfully quit your Tic Tac Toe game!");
             } else {
                 event.reply("You don't have a Tic Tac Toe game in the first place, did you mean to make a new one with the command '/tic_tac_toe' instead?");
             }
-        }
-
-        if (event.command.get_command_name() == "coop_tic_tac_toe") {
+        } else if (event.command.get_command_name() == "coop_tic_tac_toe") {
             std::string square = std::get<std::string>(event.get_parameter("square"));
             std::vector<std::string> valid_squares = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
 
@@ -349,9 +323,7 @@ int main() {
                     event.reply("You can't create a multiplayer game with yourself, did you mean to use the command '/tic_tac_toe' instead?");
                 }
             }
-        }
-
-        if (event.command.get_command_name() == "quit_coop_tic_tac_toe") {
+        } else if (event.command.get_command_name() == "quit_coop_tic_tac_toe") {
             uint64_t curr_user = event.command.usr.id;
 
             std::string other_user_str = std::get<std::string>(event.get_parameter("user"));
@@ -391,31 +363,30 @@ int main() {
                 event.edit_original_response(dpp::message(zhuyinify_arr[0]));
                 zhuyinify_arr.erase(zhuyinify_arr.begin());
             }
-        }
-
-        if (event.command.get_command_name() == "zhuyin_dictionary") {
+        } else if (event.command.get_command_name() == "zhuyin_dictionary") {
             event.reply(zhuyinDict());
-        }
-
-        if (event.command.get_command_name() == "zhuyin_type" && checkInstance("zhuyin_alpha_auths.txt", event.command.usr.username)) {
+        } else if (event.command.get_command_name() == "zhuyin_type" && checkInstance("zhuyin_alpha_auths.txt", event.command.usr.username)) {
             std::string input = std::get<std::string>(event.get_parameter("input"));
             char last_char = input[input.length() - 1];
             if (last_char != '3'  && last_char != '4' && last_char != '6' && last_char != '7') { // Last tone is a first tone
                 input += ' ';
             }
             event.reply(zhuyinType(input, event.command.usr.username + "_"));
-        }
-
-        if (event.command.get_command_name() == "zhuyin_type_precise" && checkInstance("zhuyin_alpha_auths.txt", event.command.usr.username)) {
+        } else if (event.command.get_command_name() == "zhuyin_type_precise" && checkInstance("zhuyin_alpha_auths.txt", event.command.usr.username)) {
             std::string input = std::get<std::string>(event.get_parameter("input"));
             char last_char = input[input.length() - 1];
             if (last_char != '3'  && last_char != '4' && last_char != '6' && last_char != '7') { // Last tone is a first tone
                 input += ' ';
             }
             event.reply(zhuyinTypePrecise(input, event.command.usr.username + "_"));
-        }
-
-        if (event.command.get_command_name() == "qwerty_to_zhuyin") {
+        } else if (event.command.get_command_name() == "zhuyin_type_default" && checkInstance("zhuyin_alpha_auths.txt", event.command.usr.username)) {
+            std::string input = std::get<std::string>(event.get_parameter("input"));
+            char last_char = input[input.length() - 1];
+            if (last_char != '3'  && last_char != '4' && last_char != '6' && last_char != '7') { // Last tone is a first tone
+                input += ' ';
+            }
+            event.reply(zhuyinTypeDefault(input, event.command.usr.username + "_"));
+        } else if (event.command.get_command_name() == "qwerty_to_zhuyin") {
             std::string input = std::get<std::string>(event.get_parameter("input"));
             char last_char = input[input.length() - 1];
             if (last_char != '3'  && last_char != '4' && last_char != '6' && last_char != '7') { // Last tone is a first tone
@@ -428,33 +399,90 @@ int main() {
 
         // ======== TO DO LIST ======== //
         if (event.command.get_command_name() == "new_list") {
-
+            std::string list_name = std::get<std::string>(event.get_parameter("list_name"));
+            std::string file_prefix = event.command.usr.username + "_" + list_name + "_";
+            if (checkFile("to_do/generated_files/" + file_prefix + "list.txt")) {
+                event.reply("You already have this list, did you meant to create a new list?");
+            } else {
+                newList(event.command.usr.username, list_name, file_prefix);
+                event.reply("New list \"" + list_name + "\" has been created!");
+            }
+        } else if (event.command.get_command_name() == "delete_list") {
+            std::string list_name = std::get<std::string>(event.get_parameter("list_name"));
+            std::string file_prefix = event.command.usr.username + "_" + list_name + "_";
+            if (!checkFile("to_do/generated_files/" + file_prefix + "list.txt")) {
+                event.reply("You don't have this list, did you meant to create a new list?");
+            } else {
+                deleteList(event.command.usr.username, list_name, file_prefix);
+                event.reply("The list \"" + list_name + "\" has been deleted!");
+            }
+        } else if (event.command.get_command_name() == "new_task") {
+            std::string list_name = std::get<std::string>(event.get_parameter("list_name"));
+            std::string task_name = std::get<std::string>(event.get_parameter("task_name"));
+            std::string file_prefix = event.command.usr.username + "_" + list_name + "_";
+            if (!checkFile("to_do/generated_files/" + file_prefix + "list.txt")) {
+                event.reply("You don't have this list, did you meant to create a new list?");
+            } else {
+                newTask(task_name, file_prefix);
+                event.reply("Your new task has been created, here is your updated list for \"" + list_name + "\"!\n```\n" + numberify(readVector(listPath(file_prefix))) + "\n```");
+            }
+        } else if (event.command.get_command_name() == "delete_task") {
+            std::string list_name = std::get<std::string>(event.get_parameter("list_name"));
+            int task_priority = std::stoi(std::get<std::string>(event.get_parameter("task_priority")));
+            std::string file_prefix = event.command.usr.username + "_" + list_name + "_";
+            if (!checkFile("to_do/generated_files/" + file_prefix + "list.txt")) {
+                event.reply("You don't have this list, did you meant to create a new list?");
+            } else {
+                if (deleteTask(task_priority, file_prefix)) {
+                    event.reply("Your task has been deleted, here is your updated list for \"" + list_name + "\"!\n```\n" + numberify(readVector(listPath(file_prefix))) + "\n```");
+                } else {
+                    event.reply("Your input is invalid.");
+                }
+            }
+        } else if (event.command.get_command_name() == "swap_priorities") {
+            std::string list_name = std::get<std::string>(event.get_parameter("list_name"));
+            int task_priority1 = std::stoi(std::get<std::string>(event.get_parameter("task_priority1")));
+            int task_priority2 = std::stoi(std::get<std::string>(event.get_parameter("task_priority2")));
+            std::string file_prefix = event.command.usr.username + "_" + list_name + "_";
+            if (!checkFile("to_do/generated_files/" + file_prefix + "list.txt")) {
+                event.reply("You don't have this list, did you meant to create a new list?");
+            } else {
+                if (task_priority1 == task_priority2) {
+                    event.reply("? Did you have a typo with task priorities?");
+                } else if (swapPriorities(task_priority1, task_priority2, file_prefix)) {
+                    event.reply("Your tasks' priorities have been swapped, here is your updated list for \"" + list_name + "\"!\n```\n" + numberify(readVector(listPath(file_prefix))) + "\n```");
+                } else {
+                    event.reply("Your input is invalid.");
+                }
+            }
+        } else if (event.command.get_command_name() == "bump_prioritiy") {
+            std::string list_name = std::get<std::string>(event.get_parameter("list_name"));
+            int task_priority = std::stoi(std::get<std::string>(event.get_parameter("task_priority")));
+            int new_priority = std::stoi(std::get<std::string>(event.get_parameter("new_priority")));
+            std::string file_prefix = event.command.usr.username + "_" + list_name + "_";
+            if (!checkFile("to_do/generated_files/" + file_prefix + "list.txt")) {
+                event.reply("You don't have this list, did you meant to create a new list?");
+            } else {
+                if (task_priority == new_priority) {
+                    event.reply("? Did you have a typo with task priorities?");
+                } else if (bumpPriority(task_priority, new_priority, file_prefix)) {
+                    event.reply("Your task's priority have been bumped, here is your updated list for \"" + list_name + "\"!\n```\n" + numberify(readVector(listPath(file_prefix))) + "\n```");
+                } else {
+                    event.reply("Your input is invalid.");
+                }
+            }
+        } else if (event.command.get_command_name() == "all_lists") {
+            event.reply(allLists(event.command.usr.username));
+        } else if (event.command.get_command_name() == "view_list") {
+            std::string list_name = std::get<std::string>(event.get_parameter("list_name"));
+            std::string file_prefix = event.command.usr.username + "_" + list_name + "_";
+            if (checkFile("to_do/generated_files/" + file_prefix + "list.txt")) {
+                event.reply("Here is your list for \"" + list_name + "\"!\n```\n" + numberify(readVector(listPath(file_prefix))) + "\n```");
+            } else {
+                event.reply("You don't have this list, did you meant to create a new list?");
+            }
         }
-
-        if (event.command.get_command_name() == "delete_list") {
-            
-        }
-
-        if (event.command.get_command_name() == "new_task") {
-            
-        }
-
-        if (event.command.get_command_name() == "delete_task") {
-            
-        }
-
-        if (event.command.get_command_name() == "swap_priorities") {
-            
-        }
-
-        if (event.command.get_command_name() == "bump_prioritiy") {
-            
-        }
-
-        if (event.command.get_command_name() == "all_lists") {
-            
-        }
-        
+         
         // ======== SPOTIFY LINKS ======== //
 
         // ======== MISC PHOTOS ======== //
@@ -542,15 +570,11 @@ int main() {
                 std::string command = "/cutlet";
                 std::string quote = message.substr(command.length() + 1, message.length() - command.length());
                 event.reply(cppCutlet(quote, event.msg.author.username + "_" + std::to_string(event.msg.sent) + "_"));
-            }
-
-            if (message.find("/format_cutlet") == 0 && checkInstance("cutlet_auths.txt", event.msg.author.username)) { // Begins with /format_cutlet
+            } else if (message.find("/format_cutlet") == 0 && checkInstance("cutlet_auths.txt", event.msg.author.username)) { // Begins with /format_cutlet
                 std::string command = "/format_cutlet";
                 std::string quote = message.substr(command.length() + 1, message.length() - command.length());
                 event.reply(formatCutlet(quote));
-            }
-
-            if (message.find("/jp_shortcut") == 0 && checkInstance("jp_shortcut_auths.txt", event.msg.author.username)) { // Begins with /jp_shortcut
+            } else if (message.find("/jp_shortcut") == 0 && checkInstance("jp_shortcut_auths.txt", event.msg.author.username)) { // Begins with /jp_shortcut
                 std::string command = "/jp_shortcut";
                 std::string quote = message.substr(command.length() + 1, message.length() - command.length());
                 event.reply(shortcutToJp(quote));
@@ -623,6 +647,7 @@ int main() {
         bot.set_presence(dpp::presence(dpp::ps_idle, dpp::at_game, "Abst Alg at 3 am because of Shun's Algebra addiction"));
 
         if (dpp::run_once<struct register_bot_commands>()) {
+            /*
             // ======= SHUN TRIVIA ======== //
             bot.global_command_create(dpp::slashcommand("shun_names", "Outputs all forms of Shun's names", bot.me.id));
             bot.global_command_create(dpp::slashcommand("shun_projects", "Outputs all forms of Shun's current projects", bot.me.id));
@@ -683,17 +708,21 @@ int main() {
             bot.global_command_create(dpp::slashcommand("zhuyin_dictionary", "[CURRENTLY IS A JOKE FUNCTION WITH A LIMITED DICTIONARY] Outputs term inputs that Shun's custom Zhuyin dictionary list supports", bot.me.id));
             bot.global_command_create(dpp::slashcommand("zhuyin_type", "Type on your QWERTY keyboard like it is a Zhuyin one to get Traditional Chinese characters", bot.me.id).add_option(dpp::command_option(dpp::co_string, "input",  "Remember to confirm your input by pressing Enter!", true)));
             bot.global_command_create(dpp::slashcommand("zhuyin_type_precise", "Type on your QWERTY keyboard like Zhuyin to get the most likely characters (max 6) for each sound", bot.me.id).add_option(dpp::command_option(dpp::co_string, "input",  "Remember to confirm your input by pressing Enter!", true)));
+            bot.global_command_create(dpp::slashcommand("zhuyin_type_default", "Type on your QWERTY keyboard like Zhuyin to get the most likely characters (max 6) for each sound", bot.me.id).add_option(dpp::command_option(dpp::co_string, "input",  "Remember to confirm your input by pressing Enter!", true)));
             bot.global_command_create(dpp::slashcommand("qwerty_to_zhuyin", "Type on your QWERTY keyboard like it is a Zhuyin keyboard and press Enter to get your Zhuyin", bot.me.id).add_option(dpp::command_option(dpp::co_string, "input", "Remember to confirm your input by pressing Enter!", true)));
-            // ======== JAPANESE SUPPORT ======== // (Mainly like converting words I know from English to Japanese but of course it could be romaji to kanji)
             
+            // ======== JAPANESE SUPPORT ======== // (Mainly like converting words I know from English to Japanese but of course it could be romaji to kanji)
+
             // ======== TO DO LIST ======== // (Displayed in order 1, 2, 3, ... on the side to indicate which task)
-            bot.global_command_create(dpp::slashcommand("new_list", "Creates a new to-do list", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List")));
-            bot.global_command_create(dpp::slashcommand("delete_list", "Deletes a to-do list", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List")));
-            bot.global_command_create(dpp::slashcommand("new_task", "Creates a new task in a to-do list", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List")).add_option(dpp::command_option(dpp::co_string, "task_name", "Name of said task")));
-            bot.global_command_create(dpp::slashcommand("delete_task", "Delets a task in a to-do list", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List")).add_option(dpp::command_option(dpp::co_string, "task_name", "Name of said task")));
-            bot.global_command_create(dpp::slashcommand("swap_priorities", "Swaps two priorities in a to-do list", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List")).add_option(dpp::command_option(dpp::co_string, "task_priority1", "Priority of one task")).add_option(dpp::command_option(dpp::co_string, "task_priority2", "Priority of another task")));
-            bot.global_command_create(dpp::slashcommand("bump_prioritiy", "Makes a task in a to-do list have a new priority", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List")).add_option(dpp::command_option(dpp::co_string, "task_priority", "Priority of said task")).add_option(dpp::command_option(dpp::co_string, "new_priority", "New priority you want this task to have")));
+            bot.global_command_create(dpp::slashcommand("new_list", "Creates a new to-do list", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List", true)));
+            bot.global_command_create(dpp::slashcommand("delete_list", "Deletes a to-do list", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List", true)));
+            bot.global_command_create(dpp::slashcommand("new_task", "Creates a new task in a to-do list", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List", true)).add_option(dpp::command_option(dpp::co_string, "task_name", "Name of said task", true)));
+            bot.global_command_create(dpp::slashcommand("delete_task", "Delets a task in a to-do list", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List", true)).add_option(dpp::command_option(dpp::co_string, "task_priority", "Priority of said task", true)));
+            bot.global_command_create(dpp::slashcommand("swap_priorities", "Swaps two priorities in a to-do list", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List", true)).add_option(dpp::command_option(dpp::co_string, "task_priority1", "Priority of one task", true)).add_option(dpp::command_option(dpp::co_string, "task_priority2", "Priority of another task", true)));
+            bot.global_command_create(dpp::slashcommand("bump_prioritiy", "Makes a task in a to-do list have a new priority", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List", true)).add_option(dpp::command_option(dpp::co_string, "task_priority", "Priority of said task", true)).add_option(dpp::command_option(dpp::co_string, "new_priority", "New priority you want this task to have", true)));
             bot.global_command_create(dpp::slashcommand("all_lists", "Lists out all names of to-do lists said user has", bot.me.id));
+            */
+            bot.global_command_create(dpp::slashcommand("view_list", "Views an existing new to-do list", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List", true)));
 
             // ======== SPOTIFY LINKS ======== //
 

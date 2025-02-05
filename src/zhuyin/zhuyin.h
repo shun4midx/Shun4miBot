@@ -14,6 +14,7 @@ std::string zhuyinifyString(std::string str); // Returns what the str is convert
 std::string zhuyinDict(); // Returns the entire txt file of the current custom Zhuyin dictionary available entries
 std::string zhuyinType(std::string input, std::string file_prefix); // Converts QWERTY input into Traditional Chinese characters
 std::string zhuyinTypePrecise(std::string input, std::string file_prefix); // Outputs max top 10 likely characters for each bopomo syllable typed
+std::string zhuyinTypeDefault(std::string input, std::string file_prefix); // Strings up the default characters for Zhuyin
 std::string qwertyToZhuyin(std::string input, std::string file_prefix); // Converts QWERTY input into Zhuyin
 
 std::vector<std::string> parseTobopomo(std::string str); // Converts tobopomo.js outputs into something usable as a vector

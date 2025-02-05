@@ -82,9 +82,6 @@ std::string zhuyinTypePrecise(std::string input, std::string file_prefix) {
     std::ifstream in(text_path);
 
     std::vector<std::string> zhuyin_arr = parseTobopomo(read(text_file));
-    for (std::string str : zhuyin_arr) {
-        std::cout << str << std::endl;
-    }
     write(text_file, "");
 
     // Secondly get the precise output
@@ -98,6 +95,29 @@ std::string zhuyinTypePrecise(std::string input, std::string file_prefix) {
         if (i != zhuyin_arr.size() - 1) {
             output += "\n";
         }
+    }
+
+    deleteFile(text_file); // Delete file
+
+    return output;
+}
+
+std::string zhuyinTypeDefault(std::string input, std::string file_prefix) {
+    // First convert and parse the Zhuyin
+    std::string text_file = "zhuyin/generated_files/" + file_prefix + "zhuyin_precise.txt";
+    std::string text_path = filePath(text_file);
+    std::system(("tobopomo -b '" + input + "'" + " > " + text_path).c_str()); // Call to convert from input to command
+    std::ifstream in(text_path);
+
+    std::vector<std::string> zhuyin_arr = parseTobopomo(read(text_file));
+    write(text_file, "");
+
+    // Secondly get the default output
+    std::string output = "";
+    for (int i = 0; i < zhuyin_arr.size(); i++) {
+        std::system(("tobopomo -k '" + zhuyin_arr[i] + "' -l 6 > " + text_path).c_str());
+        std::ifstream in(text_path);
+        output += parseTobopomo(readSingleLine(text_file))[0];
     }
 
     deleteFile(text_file); // Delete file
