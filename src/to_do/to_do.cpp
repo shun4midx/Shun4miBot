@@ -167,8 +167,69 @@ bool bumpPriority(int task_priority, int new_priority, std::string file_prefix) 
 
 std::string allLists(std::string username) {
     if (checkFile(allListsPath(username))) {
-        return (read(allListsPath(username)) == "" ? "None" : "```\n" + read(allListsPath(username)) + "```\n");
+        return (read(allListsPath(username)) == "" ? "None" : "```\n" + numberify(readVector(allListsPath(username))) + "```\n");
     } else {
         return "None";
+    }
+}
+
+std::string swapListPriorities(int priority1, int priority2, std::string username) {
+    if (!checkFile(allListsPath(username))) {
+        return "You don't have any lists yet";
+    } else {
+        if (read(allListsPath(username)) == "") {
+            return "You don't have any lists yet";
+        }
+
+        std::vector<std::string> lists = readVector(allListsPath(username));
+
+        // Check priority validity
+        if (lists.size() < std::max(priority1, priority2) || std::min(priority1, priority2) < 1) {
+            return "Your list priorities are invalid";
+        } else if (priority1 == priority2) {
+            return "? The two priorities you entered are the same?";
+        }
+
+        // Swaps priorities
+        std::string list1 = lists[priority1 - 1];
+        std::string list2 = lists[priority2 - 1];
+        lists[priority1 - 1] = list2;
+        lists[priority2 - 1] = list1;
+
+        // Rewrite
+        write(allListsPath(username), vectorString(lists));
+
+        // Return
+        return "Here is the new order of your lists!```\n" + numberify(readVector(allListsPath(username))) + "```\n";
+    }
+}
+
+std::string bumpListPriority(int list_priority, int new_priority, std::string username) {
+    if (!checkFile(allListsPath(username))) {
+        return "You don't have any lists yet";
+    } else {
+        if (read(allListsPath(username)) == "") {
+            return "You don't have any lists yet";
+        }
+
+        std::vector<std::string> lists = readVector(allListsPath(username));
+
+        // Check priority validity
+        if (lists.size() < std::max(list_priority, new_priority) || std::min(list_priority, new_priority) < 1) {
+            return "Your list priorities are invalid";
+        } else if (list_priority == new_priority) {
+            return "? The two priorities you entered are the same?";
+        }
+
+        // Bump priorities
+        std::string curr_list = lists[list_priority - 1];
+        lists.erase(list_priority - 1 + lists.begin());
+        lists.insert(new_priority - 1 + lists.begin(), curr_list);
+        
+        // Rewrite
+        write(allListsPath(username), vectorString(lists));
+
+        // Return
+        return "Here is the new order of your lists!```\n" + numberify(readVector(allListsPath(username))) + "```\n";
     }
 }

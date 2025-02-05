@@ -508,6 +508,14 @@ int main() {
                     event.reply("Said task priority does not exist.");
                 }
             }
+        } else if (event.command.get_command_name() == "swap_list_priorities") {
+            int list_priority1 = std::stoi(std::get<std::string>(event.get_parameter("list_priority1")));
+            int list_priority2 = std::stoi(std::get<std::string>(event.get_parameter("list_priority2")));
+            event.reply(swapListPriorities(list_priority1, list_priority2, event.command.usr.username));
+        } else if (event.command.get_command_name() == "bump_list_priority") {
+            int list_priority = std::stoi(std::get<std::string>(event.get_parameter("list_priority")));
+            int new_priority = std::stoi(std::get<std::string>(event.get_parameter("new_priority")));
+            event.reply(bumpListPriority(list_priority, new_priority, event.command.usr.username));
         }
          
         // ======== SPOTIFY LINKS ======== //
@@ -750,6 +758,8 @@ int main() {
             bot.global_command_create(dpp::slashcommand("view_list", "Views an existing new to-do list", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List", true)));
             bot.global_command_create(dpp::slashcommand("rename_list", "Renames a list", bot.me.id).add_option(dpp::command_option(dpp::co_string, "original_name", "Original name of said To-Do List", true)).add_option(dpp::command_option(dpp::co_string, "new_name", "New name of said To-Do List", true)));
             bot.global_command_create(dpp::slashcommand("rename_task", "Renames a task", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List", true)).add_option(dpp::command_option(dpp::co_string, "task_priority", "Task priority in said To-Do List", true)).add_option(dpp::command_option(dpp::co_string, "new_name", "New name you want this task to have", true)));
+            bot.global_command_create(dpp::slashcommand("swap_list_priorities", "Swaps two priorities in all lists", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_priority1", "Priority of one list", true)).add_option(dpp::command_option(dpp::co_string, "list_priority2", "Priority of another list", true)));
+            bot.global_command_create(dpp::slashcommand("bump_list_priority", "Makes a list a new priority", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_priority", "Priority of said list", true)).add_option(dpp::command_option(dpp::co_string, "new_priority", "New priority you want this list to have", true)));
 
             // ======== SPOTIFY LINKS ======== //
 
