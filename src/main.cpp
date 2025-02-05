@@ -481,6 +481,33 @@ int main() {
             } else {
                 event.reply("You don't have this list, did you meant to create a new list?");
             }
+        } else if (event.command.get_command_name() == "rename_list") {
+            std::string original_name = std::get<std::string>(event.get_parameter("original_name"));
+            std::string new_name = std::get<std::string>(event.get_parameter("new_name"));
+            std::string file_prefix = event.command.usr.username + "_" + original_name + "_";
+            if (!checkFile("to_do/generated_files/" + file_prefix + "list.txt")) {
+                event.reply("You don't have this list, did you meant to create a new list?");
+            } else {
+                renameList(event.command.usr.username, original_name, new_name, file_prefix);
+                event.reply("The list \"" + original_name + "\" has been renamed to \"" + new_name + "\"!");
+            }
+        } else if (event.command.get_command_name() == "rename_task") {
+            std::string list_name = std::get<std::string>(event.get_parameter("list_name"));
+            std::string new_name = std::get<std::string>(event.get_parameter("new_name"));
+            int task_priority = std::stoi(std::get<std::string>(event.get_parameter("task_priority")));
+            std::string file_prefix = event.command.usr.username + "_" + list_name + "_";
+            if (!checkFile("to_do/generated_files/" + file_prefix + "list.txt")) {
+                event.reply("You don't have this list, did you meant to create a new list?");
+            } else {
+                int success = renameTask(task_priority, new_name, file_prefix);
+                if (success == 2) {
+                    event.reply("Your task has been renamed, here is your updated list for \"" + list_name + "\"!\n```\n" + numberify(readVector(listPath(file_prefix))) + "\n```");
+                } else if (success == 1) {
+                    event.reply("? Why are you renaming something with the same name as before?");
+                } else if (success == 0) {
+                    event.reply("Said task priority does not exist.");
+                }
+            }
         }
          
         // ======== SPOTIFY LINKS ======== //
@@ -721,6 +748,8 @@ int main() {
             bot.global_command_create(dpp::slashcommand("bump_prioritiy", "Makes a task in a to-do list have a new priority", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List", true)).add_option(dpp::command_option(dpp::co_string, "task_priority", "Priority of said task", true)).add_option(dpp::command_option(dpp::co_string, "new_priority", "New priority you want this task to have", true)));
             bot.global_command_create(dpp::slashcommand("all_lists", "Lists out all names of to-do lists said user has", bot.me.id));
             bot.global_command_create(dpp::slashcommand("view_list", "Views an existing new to-do list", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List", true)));
+            bot.global_command_create(dpp::slashcommand("rename_list", "Renames a list", bot.me.id).add_option(dpp::command_option(dpp::co_string, "original_name", "Original name of said To-Do List", true)).add_option(dpp::command_option(dpp::co_string, "new_name", "New name of said To-Do List", true)));
+            bot.global_command_create(dpp::slashcommand("rename_task", "Renames a task", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_name", "Name of said To-Do List", true)).add_option(dpp::command_option(dpp::co_string, "task_priority", "Task priority in said To-Do List", true)).add_option(dpp::command_option(dpp::co_string, "new_name", "New name you want this task to have", true)));
 
             // ======== SPOTIFY LINKS ======== //
 

@@ -32,7 +32,7 @@ std::string numberify(std::vector<std::string> arr) {
 
     for (int i = 0; i < arr.size(); i++) {
         if (i < 9 && arr.size() >= 10) {
-            output += " " + std::to_string(i + 1);
+            output += std::to_string(i + 1) + ".  ";
         } else {
             output += std::to_string(i + 1) + ". ";
         }
@@ -76,6 +76,23 @@ void deleteList(std::string username, std::string list_name, std::string file_pr
     write(allListsPath(username), vectorString(all_lists));
 }
 
+void renameList(std::string username, std::string original_name, std::string new_name, std::string file_prefix) {
+    std::string new_file_prefix = username + "_" + new_name + "_";
+    // Rename from lists' memory
+    std::vector<std::string> all_lists = parseAllLists(username);
+    for (int i = 0; i < all_lists.size(); i++) {
+        if (all_lists[i] == original_name) {
+            all_lists[i] = new_name;
+            break;
+        }
+    }
+    write(allListsPath(username), vectorString(all_lists));
+
+    // Rename the actual file
+    write(listPath(new_file_prefix), read(listPath(file_prefix)));
+    deleteFile(listPath(file_prefix));
+}
+
 void newTask(std::string task_name, std::string file_prefix) {
     std::vector<std::string> tasks = readVector(listPath(file_prefix));
     tasks.push_back(task_name);
@@ -95,6 +112,22 @@ bool deleteTask(int priority, std::string file_prefix) {
 
     write(listPath(file_prefix), vectorString(tasks));
     return true;
+}
+
+// 0 = No priority, 1 = No name change, 2 = OK
+int renameTask(int priority, std::string new_name, std::string file_prefix) {
+    std::vector<std::string> tasks = readVector(listPath(file_prefix));
+
+    // Check priority validity
+    if (tasks.size() < priority || priority < 1) {
+        return 0;
+    } else if (tasks[priority - 1] == new_name) {
+        return 1;
+    } else {
+        tasks[priority - 1] = new_name;
+        write(listPath(file_prefix), vectorString(tasks)); // Rewrite content
+        return 2;
+    }
 }
 
 bool swapPriorities(int priority1, int priority2, std::string file_prefix) {
