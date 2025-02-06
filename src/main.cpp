@@ -658,13 +658,25 @@ int main() {
                 std::transform(quote.begin(), quote.end(), quote.begin(), ::tolower);
                 
                 if (checkInstance("misc/misc_files.txt", quote)) {
-                    std::string file_name = quote + ".png";
+                    std::string file_name;
+
+                    // Code exception file
+                    if (checkInstance("misc/misc_gif_exceptions.txt", quote)) {
+                        file_name = quote + ".gif";
+                    } else {
+                        file_name = quote + ".png";
+                    }
+
                     dpp::message message(event.msg.channel_id, "");
                     message.add_file(file_name, dpp::utility::read_file(filePath("misc/images/" + file_name)));
                     event.reply(message);
                 } else {
                     event.reply("Said file doesn't exist");
                 }
+            }
+
+            if (message == "/dulc_files" && checkInstance("misc_auths.txt", event.msg.author.username)) {
+                event.reply(read("misc/misc_files.txt"));
             }
 
             // ======== PLURAL KIT THING FOR MY ACCOUNTS ======== //
