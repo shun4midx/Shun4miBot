@@ -521,7 +521,6 @@ int main() {
          
         // ======== SPOTIFY LINKS ======== //
         if (event.command.get_command_name() == "spotify_playlist" && checkInstance("spotify_shortcut_auths.txt", event.command.usr.username)) {
-            std::cout << "hi";
             std::string playlist = std::get<std::string>(event.get_parameter("playlist"));
             std::transform(playlist.begin(), playlist.end(), playlist.begin(), ::tolower);
             std::unordered_map<std::string, std::vector<std::string>> parsed_dict = parseDict("spotify/playlist_dict.txt");
@@ -533,9 +532,24 @@ int main() {
             }
         }
 
-        // ======== MISC PHOTOS ======== //
-        
         // ======== EMOJI KITCHEN ======= // (When I'm on my computer for example, I want to access Emoji Kitchen too)
+        if (event.command.get_command_name() == "emoji_kitchen") {
+            std::string shortcut = std::get<std::string>(event.get_parameter("shortcut"));
+            std::transform(shortcut.begin(), shortcut.end(), shortcut.begin(), ::tolower);
+            std::unordered_map<std::string, std::vector<std::string>> parsed_dict = parseDict("emoji_kitchen/shortcut_dict.txt", true);
+            parsed_dict = reverseDict(parsed_dict);
+
+            if (parsed_dict.find(shortcut) != parsed_dict.end()) { // Found the shortcut
+                std::string file_name = parsed_dict[shortcut][0];
+                dpp::message message(event.command.channel_id, "");
+                message.add_file(file_name, dpp::utility::read_file(filePath("emoji_kitchen/images/" + file_name, true)));
+                event.reply(message);
+            } else {
+                event.reply("This shortcut doesn't exist"); 
+            }
+        }
+
+        // ======== MISC PHOTOS ======== //
 
         // ======== FORMAT TEXT ======== // (Subscripts, Superscripts, Greek symbols, Math symbols, just made for copy and pasting ease, could be considered a mini text parser)
         
@@ -781,9 +795,10 @@ int main() {
             // ======== SPOTIFY LINKS ======== //
             bot.global_command_create(dpp::slashcommand("spotify_playlist", "Supports Shun's shortcuts for Spotify playlists", bot.me.id).add_option(dpp::command_option(dpp::co_string, "playlist", "Shortcut for said playlist", true)));
 
-            // ======== MISC PHOTOS ======== //
-            
             // ======== EMOJI KITCHEN ======= // (When I'm on my computer for example, I want to access Emoji Kitchen too)
+            bot.global_command_create(dpp::slashcommand("emoji_kitchen", "Supports Shun's shortcuts for Emoji Kitchen stickers", bot.me.id).add_option(dpp::command_option(dpp::co_string, "shortcut", "Shortcut for said sticker", true)));
+
+            // ======== MISC PHOTOS ======== //
 
             // ======== FORMAT TEXT ======== // (Subscripts, Superscripts, Greek symbols, Math symbols, just made for copy and pasting ease, could be considered a mini text parser)
 
