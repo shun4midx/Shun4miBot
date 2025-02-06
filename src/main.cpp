@@ -27,6 +27,7 @@
 #include "tic_tac_toe/tic_tac_toe.h"
 #include "zhuyin/zhuyin.h"
 #include "to_do/to_do.h"
+#include "dictionary/dictionary.h"
 
 int main() {
     std::srand(unsigned(time(NULL)));
@@ -351,7 +352,7 @@ int main() {
         }
 
         // ======== ZHUYIN ======== // (I will actually make this a serious thing later, but this is for fun)
-        if (event.command.get_command_name() == "zhuyin") {
+        if (event.command.get_command_name() == "zhuyin" && checkInstance("zhuyin_alpha_auths.txt", event.command.usr.username)) {
             std::string term = std::get<std::string>(event.get_parameter("term"));
             std::vector<std::string> zhuyinify_arr = zhuyinify(term);
 
@@ -519,6 +520,18 @@ int main() {
         }
          
         // ======== SPOTIFY LINKS ======== //
+        if (event.command.get_command_name() == "spotify_playlist" && checkInstance("spotify_shortcut_auths.txt", event.command.usr.username)) {
+            std::cout << "hi";
+            std::string playlist = std::get<std::string>(event.get_parameter("playlist"));
+            std::transform(playlist.begin(), playlist.end(), playlist.begin(), ::tolower);
+            std::unordered_map<std::string, std::vector<std::string>> parsed_dict = parseDict("spotify/playlist_dict.txt");
+
+            if (parsed_dict.find(playlist) != parsed_dict.end()) { // Found the playlist
+                event.reply(parsed_dict[playlist][0]);
+            } else {
+                event.reply("This shortcut doesn't exist"); 
+            }
+        }
 
         // ======== MISC PHOTOS ======== //
         
@@ -605,6 +618,10 @@ int main() {
                 std::string command = "/cutlet";
                 std::string quote = message.substr(command.length() + 1, message.length() - command.length());
                 event.reply(cppCutlet(quote, event.msg.author.username + "_" + std::to_string(event.msg.sent) + "_"));
+            } else if (message.find("/to_romaji") == 0 && checkInstance("cutlet_auths.txt", event.msg.author.username)) { // Begins with /to_romaji (This is unpunctuated)
+                std::string command = "/to_romaji";
+                std::string quote = message.substr(command.length() + 1, message.length() - command.length());
+                event.reply(toRomaji(quote));
             } else if (message.find("/format_cutlet") == 0 && checkInstance("cutlet_auths.txt", event.msg.author.username)) { // Begins with /format_cutlet
                 std::string command = "/format_cutlet";
                 std::string quote = message.substr(command.length() + 1, message.length() - command.length());
@@ -762,6 +779,7 @@ int main() {
             bot.global_command_create(dpp::slashcommand("bump_list_priority", "Makes a list a new priority", bot.me.id).add_option(dpp::command_option(dpp::co_string, "list_priority", "Priority of said list", true)).add_option(dpp::command_option(dpp::co_string, "new_priority", "New priority you want this list to have", true)));
 
             // ======== SPOTIFY LINKS ======== //
+            bot.global_command_create(dpp::slashcommand("spotify_playlist", "Supports Shun's shortcuts for Spotify playlists", bot.me.id).add_option(dpp::command_option(dpp::co_string, "playlist", "Shortcut for said playlist", true)));
 
             // ======== MISC PHOTOS ======== //
             

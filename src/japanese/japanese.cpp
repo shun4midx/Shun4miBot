@@ -36,6 +36,8 @@ std::unordered_map<std::string, std::string> PUNCTUATION = {
 };
 
 // ======== FUNCTIONS ======== //
+
+// ======== EXCLUSIVES ======== //
 std::string cppCutlet(std::string phrase, std::string file_prefix) {
 	// Write file_prefix
 	std::string temp_prefix = read("japanese/generated_files/edited_prefixes.txt");
@@ -56,14 +58,19 @@ std::string cppCutlet(std::string phrase, std::string file_prefix) {
 	return cutlet_phrase;
 }
 
+std::string toRomaji(std::string phrase) {
+	return "";
+}
+
 std::string formatCutlet(std::string phrase) {
 	return "";
 }
 
-std::string jpToRomaji(std::string phrase) {
+std::string shortcutToJp(std::string shortcut) {
 	return "";
 }
 
-std::string shortcutToJp(std::string shortcut) {
+// ======== GENERAL PUBLIC ======== //
+std::string jpToRomaji(std::string phrase) {
 	return "";
 }
