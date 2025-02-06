@@ -652,7 +652,9 @@ int main() {
             }
 
             // ======== MISC PHOTOS ======== //
-            if (message.find("/dulc") == 0 && checkInstance("misc_auths.txt", event.msg.author.username)) {
+            if (message == "/dulc_files" && checkInstance("misc_auths.txt", event.msg.author.username)) {
+                event.reply(read("misc/misc_files.txt"));
+            } else if (message.find("/dulc") == 0 && checkInstance("misc_auths.txt", event.msg.author.username)) {
                 std::string command = "/dulc";
                 std::string quote = message.substr(command.length() + 1, message.length() - command.length());
                 std::transform(quote.begin(), quote.end(), quote.begin(), ::tolower);
@@ -673,10 +675,6 @@ int main() {
                 } else {
                     event.reply("Said file doesn't exist");
                 }
-            }
-
-            if (message == "/dulc_files" && checkInstance("misc_auths.txt", event.msg.author.username)) {
-                event.reply(read("misc/misc_files.txt"));
             }
 
             // ======== PLURAL KIT THING FOR MY ACCOUNTS ======== //
@@ -752,7 +750,6 @@ int main() {
         bot.set_presence(dpp::presence(dpp::ps_idle, dpp::at_game, "Abst Alg at 3 am because of Shun's Algebra addiction"));
 
         if (dpp::run_once<struct register_bot_commands>()) {
-            /*
             // ======= SHUN TRIVIA ======== //
             bot.global_command_create(dpp::slashcommand("shun_names", "Outputs all forms of Shun's names", bot.me.id));
             bot.global_command_create(dpp::slashcommand("shun_projects", "Outputs all forms of Shun's current projects", bot.me.id));
@@ -837,7 +834,6 @@ int main() {
 
             // ======== EMOJI KITCHEN ======= // (When I'm on my computer for example, I want to access Emoji Kitchen too)
             bot.global_command_create(dpp::slashcommand("emoji_kitchen", "Supports Shun's shortcuts for Emoji Kitchen stickers", bot.me.id).add_option(dpp::command_option(dpp::co_string, "shortcut", "Shortcut for said sticker", true)));
-            */ 
 
             // ======== FORMAT TEXT ======== // (Subscripts, Superscripts, Greek symbols, Math symbols, just made for copy and pasting ease, could be considered a mini text parser)
 
