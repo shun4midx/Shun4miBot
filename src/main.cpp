@@ -652,8 +652,8 @@ int main() {
             }
 
             // ======== MISC PHOTOS ======== //
-            if (message.find("/drawing") == 0 && checkInstance("misc_auths.txt", event.msg.author.username)) {
-                std::string command = "/drawing";
+            if (message.find("/dulc") == 0 && checkInstance("misc_auths.txt", event.msg.author.username)) {
+                std::string command = "/dulc";
                 std::string quote = message.substr(command.length() + 1, message.length() - command.length());
                 std::transform(quote.begin(), quote.end(), quote.begin(), ::tolower);
                 
