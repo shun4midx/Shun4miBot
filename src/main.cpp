@@ -365,21 +365,21 @@ int main() {
             }
         } else if (event.command.get_command_name() == "zhuyin_dictionary") {
             event.reply(zhuyinDict());
-        } else if (event.command.get_command_name() == "zhuyin_type" && checkInstance("zhuyin_alpha_auths.txt", event.command.usr.username)) {
+        } else if (event.command.get_command_name() == "zhuyin_type") {
             std::string input = std::get<std::string>(event.get_parameter("input"));
             char last_char = input[input.length() - 1];
             if (last_char != '3'  && last_char != '4' && last_char != '6' && last_char != '7') { // Last tone is a first tone
                 input += ' ';
             }
             event.reply(zhuyinType(input, event.command.usr.username + "_"));
-        } else if (event.command.get_command_name() == "zhuyin_type_precise" && checkInstance("zhuyin_alpha_auths.txt", event.command.usr.username)) {
+        } else if (event.command.get_command_name() == "zhuyin_type_precise") {
             std::string input = std::get<std::string>(event.get_parameter("input"));
             char last_char = input[input.length() - 1];
             if (last_char != '3'  && last_char != '4' && last_char != '6' && last_char != '7') { // Last tone is a first tone
                 input += ' ';
             }
             event.reply(zhuyinTypePrecise(input, event.command.usr.username + "_"));
-        } else if (event.command.get_command_name() == "zhuyin_type_default" && checkInstance("zhuyin_alpha_auths.txt", event.command.usr.username)) {
+        } else if (event.command.get_command_name() == "zhuyin_type_default") {
             std::string input = std::get<std::string>(event.get_parameter("input"));
             char last_char = input[input.length() - 1];
             if (last_char != '3'  && last_char != '4' && last_char != '6' && last_char != '7') { // Last tone is a first tone
