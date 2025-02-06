@@ -36,7 +36,7 @@ std::unordered_map<std::string, std::vector<std::string>> parseDict(std::string 
                     j++; // Skip space too
                 }
             } else { // Got term
-                if (curr_line[j] != ',') { // Still same term
+                if (j == curr_line.length() - 1 || curr_line[j] != ',' || curr_line[j + 1] != ' ') { // Still same term
                     temp += curr_line[j];
                 } else {
                     term_arr.push_back(temp); // Push back new term
