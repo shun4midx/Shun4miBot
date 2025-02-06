@@ -113,26 +113,21 @@ std::pair<std::vector<std::string>, std::vector<bool>> parseDictWords(std::strin
                 if (parsed_str[idx].length() < curr_term.length()) {
                     idx++; // Skip since there is no point in finding
                 } else {
-                    for (int j = 0; j < parsed_str[idx].length() - curr_term.length() + 1; j++) {
-                        if (parsed_str[idx].substr(j, curr_term.length()) != curr_term) {
-                            continue; // Can't find
-                        } else { // Found, time to parse
-                            // Break string into three parts
-                            std::string substr1 = parsed_str[idx].substr(0, j);
-                            std::string substr2 = parsed_str[idx].substr(j, curr_term.length());
-                            substr2 = dictionary[curr_term][0]; // Replace with the first one by default
-                            std::string substr3 = parsed_str[idx].substr(j + curr_term.length());
+                    // Find and splice
+                    int find_idx = parsed_str[idx].find(curr_term);
+                    std::string substr1 = parsed_str[idx].substr(0, find_idx);
+                    std::string substr2 = parsed_str[idx].substr(find_idx, curr_term.length());
+                    substr2 = dictionary[curr_term][0]; // Replace with the first one by default
+                    std::string substr3 = parsed_str[idx].substr(find_idx + curr_term.length());
 
-                            parsed_str[idx] = substr1;
-                            parsed_str.insert(idx + 1 + parsed_str.begin(), substr2);
-                            parsed_str.insert(idx + 2 + parsed_str.begin(), substr3);
+                    parsed_str[idx] = substr1;
+                    parsed_str.insert(idx + 1 + parsed_str.begin(), substr2);
+                    parsed_str.insert(idx + 2 + parsed_str.begin(), substr3);
 
-                            replaced[idx] = false;
-                            replaced.insert(idx + 1 + replaced.begin(), true);
-                            replaced.insert(idx + 2 + replaced.begin(), false);
-                            idx++;
-                        }
-                    }
+                    replaced[idx] = false;
+                    replaced.insert(idx + 1 + replaced.begin(), true);
+                    replaced.insert(idx + 2 + replaced.begin(), false);
+                    idx++;
                 }
             }
         }

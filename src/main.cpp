@@ -549,8 +549,6 @@ int main() {
             }
         }
 
-        // ======== MISC PHOTOS ======== //
-
         // ======== FORMAT TEXT ======== // (Subscripts, Superscripts, Greek symbols, Math symbols, just made for copy and pasting ease, could be considered a mini text parser)
         
         // ======== Shun4MIDI ======== //
@@ -635,7 +633,7 @@ int main() {
             } else if (message.find("/to_romaji") == 0 && checkInstance("cutlet_auths.txt", event.msg.author.username)) { // Begins with /to_romaji (This is unpunctuated)
                 std::string command = "/to_romaji";
                 std::string quote = message.substr(command.length() + 1, message.length() - command.length());
-                event.reply(toRomaji(quote));
+                event.reply(toRomaji(quote, event.msg.author.username + "_" + std::to_string(event.msg.sent) + "_"));
             } else if (message.find("/format_cutlet") == 0 && checkInstance("cutlet_auths.txt", event.msg.author.username)) { // Begins with /format_cutlet
                 std::string command = "/format_cutlet";
                 std::string quote = message.substr(command.length() + 1, message.length() - command.length());
@@ -644,6 +642,29 @@ int main() {
                 std::string command = "/jp_shortcut";
                 std::string quote = message.substr(command.length() + 1, message.length() - command.length());
                 event.reply(shortcutToJp(quote));
+            }
+
+            // ======== EMOJI KITCHEN ======= //
+            if (message.find("/emoji_kitchen_shortcuts") == 0) {
+                std::string command = "/emoji_kitchen_shortcuts";
+                std::string quote = message.substr(command.length() + 1, message.length() - command.length());
+                event.reply("```\n" + read("emoji_kitchen/shortcut_dict.txt", true) + "\n```");
+            }
+
+            // ======== MISC PHOTOS ======== //
+            if (message.find("/drawing") == 0 && checkInstance("misc_auths.txt", event.msg.author.username)) {
+                std::string command = "/drawing";
+                std::string quote = message.substr(command.length() + 1, message.length() - command.length());
+                std::transform(quote.begin(), quote.end(), quote.begin(), ::tolower);
+                
+                if (checkInstance("misc/misc_files.txt", quote)) {
+                    std::string file_name = quote + ".png";
+                    dpp::message message(event.msg.channel_id, "");
+                    message.add_file(file_name, dpp::utility::read_file(filePath("misc/images/" + file_name)));
+                    event.reply(message);
+                } else {
+                    event.reply("Said file doesn't exist");
+                }
             }
 
             // ======== PLURAL KIT THING FOR MY ACCOUNTS ======== //
@@ -704,6 +725,12 @@ int main() {
                 bot.message_add_reaction(event.msg.id, event.msg.channel_id, this_is_fine_dpp_emoji);
                 event.reply(og_message, true);
             }
+
+            // ========= SAVE ME ======== //
+            if (message == "/save_me") {
+                bot.message_delete(event.msg.id, event.msg.channel_id);
+                event.send("<:saveme:1336983390267768863>");
+            }
         }
     });
 
@@ -713,6 +740,7 @@ int main() {
         bot.set_presence(dpp::presence(dpp::ps_idle, dpp::at_game, "Abst Alg at 3 am because of Shun's Algebra addiction"));
 
         if (dpp::run_once<struct register_bot_commands>()) {
+            /*
             // ======= SHUN TRIVIA ======== //
             bot.global_command_create(dpp::slashcommand("shun_names", "Outputs all forms of Shun's names", bot.me.id));
             bot.global_command_create(dpp::slashcommand("shun_projects", "Outputs all forms of Shun's current projects", bot.me.id));
@@ -797,8 +825,7 @@ int main() {
 
             // ======== EMOJI KITCHEN ======= // (When I'm on my computer for example, I want to access Emoji Kitchen too)
             bot.global_command_create(dpp::slashcommand("emoji_kitchen", "Supports Shun's shortcuts for Emoji Kitchen stickers", bot.me.id).add_option(dpp::command_option(dpp::co_string, "shortcut", "Shortcut for said sticker", true)));
-
-            // ======== MISC PHOTOS ======== //
+            */ 
 
             // ======== FORMAT TEXT ======== // (Subscripts, Superscripts, Greek symbols, Math symbols, just made for copy and pasting ease, could be considered a mini text parser)
 

@@ -12,6 +12,7 @@
 #include <cmath>
 #include <unordered_map>
 #include "../file_manager/file_manager.h"
+#include "../dictionary/dictionary.h"
 
 #define MAX_BUFFER 5000000
 
@@ -58,8 +59,31 @@ std::string cppCutlet(std::string phrase, std::string file_prefix) {
 	return cutlet_phrase;
 }
 
-std::string toRomaji(std::string phrase) {
-	return "";
+std::string toRomaji(std::string phrase, std::string file_prefix) {
+    std::unordered_map<std::string, std::vector<std::string>> JAPANESE_DICT = parseDict("japanese/jp_custom_dict.txt");
+
+    if (JAPANESE_DICT.find(phrase) != JAPANESE_DICT.end()) {
+        return JAPANESE_DICT[phrase][0];
+    } else {
+		std::pair<std::vector<std::string>, std::vector<bool>> parse_dict_words = parseDictWords(phrase, JAPANESE_DICT);
+        std::vector<std::string> parsed_txt = parse_dict_words.first;
+        std::string temp = "";
+
+        for (int i = 0; i < parsed_txt.size(); i++) {
+            if (parse_dict_words.second[i]) { // Changed already
+                parsed_txt[i].erase(std::remove(parsed_txt[i].begin(), parsed_txt[i].end(), '|'), parsed_txt[i].end());
+				temp += parsed_txt[i];
+            } else { // Cutlet it
+                temp += cppCutlet(parsed_txt[i], file_prefix);
+            }
+
+            if (i != parsed_txt.size() - 1) {
+                temp += " ";
+            }
+        }
+
+        return temp;
+    }
 }
 
 std::string formatCutlet(std::string phrase) {

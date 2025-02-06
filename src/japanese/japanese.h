@@ -11,7 +11,7 @@
 // JP to Romaji
 std::string cppCutlet(std::string phrase, std::string file_prefix); // Calls the cutlet function in Python with the user prefix
 std::string formatCutlet(std::string phrase); // Formats cutlet output correctly according to pronunciation
-std::string toRomaji(std::string phrase); // Converts input to romaji, not taking punctuation into consideration yet
+std::string toRomaji(std::string phrase, std::string file_prefix); // Converts input to romaji, not taking punctuation into consideration yet
 std::string jpToRomaji(std::string phrase); // Converts an entire phrase into romaji (whilst keeping the custom_dict.txt in mind)
 
 // My Shortcuts

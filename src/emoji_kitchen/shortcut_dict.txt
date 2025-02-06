@@ -3,7 +3,7 @@ angry_turtle.jpg: angry turtle, angry turdle, 😡🐢, 🐢😡
 bird_stone.jpg: bird stone, 🐦🪨, 🪨🐦
 clown_skull.jpg: clown skull, skull clown, 💀🤡, 🤡💀
 clown_turtle.jpg: clown turtle, clown turdle, 🤡🐢, 🐢🤡
-clown.jpg: clown, clown shun, 🤡
+clown.jpg: clown, clown shun, clown pudding, 🤡
 cool_stone.jpg: cool stone, 🗿😎 
 crying_turtle.jpg: crying turtle, crying turdle, 😭🐢, 🐢😭
 dumb_stone.jpg: dumb stone, shun stone, 🗿
@@ -12,7 +12,7 @@ idk_turtle.jpg: idk turtle, idk turdle, 🤷‍♂️🐢, 🐢🤷‍♂️
 laughing_turtle.jpg: laughing turtle, laughing turdle, laugh turtle, laugh turdle, 😂🐢, 🐢😂
 melting_turtle.jpg: melting turtle, melting turdle, melt turtle, melting turdle, 🫠🐢, 🐢🫠
 mouse_turtle.jpg: mouse turtle, mouse turdle, 🐭🐢, 🐢🐭
-music_demon.jpg: music demon, music demons, 🎵😈, 😈🎵
+music_demon.jpg: music demon, music demons, moosik demon, moosik demons, 🎵😈, 😈🎵
 nerd_turtle.jpg: nerd turtle, nerd turdle, 🤓🐢, 🐢🤓
 pensive_turtle.jpg: pensive turtle, pensive turdle, 😔🐢, 🐢😔
 pleading_turtle.jpg: pleading turtle, pleading turdle, cute turtle, cute turdle, 🥺🐢, 🐢🥺
