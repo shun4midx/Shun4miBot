@@ -24,8 +24,9 @@ std::unordered_map<std::string, std::string> PUNCTUATION = {
 	{ "：", ":" },
 	{ "；", ";" },
 	{ "？", "?" },
-	{ "「", std::to_string('"') },
-	{ "」", std::to_string('"') },
+	{ "！", "!" },
+	{ "「", "\"" },
+	{ "」", "\"" },
 	{ "『", "'" },
 	{ "』", "'" },
 	{ "｜", "|" },
@@ -37,7 +38,7 @@ std::unordered_map<std::string, std::string> PUNCTUATION = {
 // ======== FUNCTIONS ======== //
 std::string cppCutlet(std::string phrase, std::string file_prefix) {
 	// Write file_prefix
-	std::string temp_prefix = read("japanese/generated_files/edited_prefixes.txt", true);
+	std::string temp_prefix = read("japanese/generated_files/edited_prefixes.txt");
 	write("japanese/generated_files/edited_prefixes.txt", temp_prefix + (temp_prefix == "" ? "" : "\n") + file_prefix, true);
 	
 	// Write cutlet in cpp_to_py.txt

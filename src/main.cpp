@@ -686,7 +686,7 @@ int main() {
             bot.global_command_create(dpp::slashcommand("shun_names", "Outputs all forms of Shun's names", bot.me.id));
             bot.global_command_create(dpp::slashcommand("shun_projects", "Outputs all forms of Shun's current projects", bot.me.id));
             bot.global_command_create(dpp::slashcommand("shun_pronouns", "What are Shun's pronouns?", bot.me.id));
-
+            
             // ======== Shun4miBot QUIRKS ======= //
             bot.global_command_create(dpp::slashcommand("best_programming_language", "What is the best programming language?", bot.me.id));
             bot.global_command_create(dpp::slashcommand("is_cpp_good", "Is C++ good?", bot.me.id));

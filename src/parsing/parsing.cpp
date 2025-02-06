@@ -41,7 +41,7 @@ std::vector<std::string> parse(std::string& choices, std::string separator) {
 std::string vectorString(std::vector<std::string> arr) {
     std::string ans = "";
     for (int i = 0; i < arr.size(); i++) {
-        ans += (arr[i] + "\n");
+        ans += (arr[i] + (i != arr.size() - 1 ? "\n" : ""));
     }
     return ans;
 }
