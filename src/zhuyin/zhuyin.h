@@ -16,7 +16,8 @@ std::string zhuyinType(std::string input, std::string file_prefix); // Converts 
 std::string zhuyinTypePrecise(std::string input, std::string file_prefix); // Outputs max top 10 likely characters for each bopomo syllable typed
 std::string zhuyinTypeDefault(std::string input, std::string file_prefix); // Strings up the default characters for Zhuyin
 std::string qwertyToZhuyin(std::string input, std::string file_prefix); // Converts QWERTY input into Zhuyin
-std::string qwertyToZhuyinNoSpace(std::string input, std::string file_prefix); // Converts QWERTY input into Zhuyin with no space
+std::vector<std::string> qwertyToZhuyinVector(std::string input, std::string file_prefix); // QWERTY to ̉Zhuyin but as a vector
+std::vector<std::string> qwertyToZhuyinNoSpace(std::string input, std::string file_prefix); // Converts QWERTY input into Zhuyin with no space
 
 std::vector<std::string> parseTobopomo(std::string str); // Converts tobopomo.js outputs into something usable as a vector
 std::string printBopomo(std::vector<std::string> zhuyin_arr); // Returns a given parsed zhuyin vector as a string

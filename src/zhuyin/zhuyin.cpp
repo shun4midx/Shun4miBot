@@ -51,33 +51,28 @@ std::string zhuyinDict() {
 }
 
 std::string zhuyinType(std::string input, std::string file_prefix) {
-    if (input == "vu;6c93") {
-        return "翔海";
-    } else if (input == "du; ") {
-        return "ㄎㄧㄤ";
-    } else if (input == "u03nj04z83") {
-        return "演算法";
-    } else if (input == "ru.4ru.4ji3") {
-        return "救救我";
-    } else if (input == "ru.4au/4") {
-        return "救命";
-    } else {
-        std::unordered_map<std::string, std::vector<std::string>> ZHUYIN_TYPE_DICT = parseDict("zhuyin/zhuyin_type_dict.txt");
-        ZHUYIN_TYPE_DICT = reverseDict(ZHUYIN_TYPE_DICT);
-        std::pair<std::vector<std::string>, std::vector<bool>> parse_dict_words = parseDictWords(input, ZHUYIN_TYPE_DICT);
-        std::vector<std::string> parsed_txt = parse_dict_words.first;
-        std::string temp = "";
+    std::unordered_map<std::string, std::vector<std::string>> ZHUYIN_TYPE_DICT = parseDict("zhuyin/zhuyin_type_dict.txt");
+    ZHUYIN_TYPE_DICT = reverseDict(ZHUYIN_TYPE_DICT);
 
-        for (int i = 0; i < parsed_txt.size(); i++) {
-            if (parse_dict_words.second[i]) { // Changed already
-                temp += parsed_txt[i];
-            } else { // Zhuyin Type
-                temp += zhuyinTypeDefault(parsed_txt[i], file_prefix);
-            }
-        }
-
-        return temp;
+    std::vector<std::string> parsed_zhuyin = qwertyToZhuyinVector(input, file_prefix);
+    std::string zhuyin_input = "";
+    for (int i = 0; i < parsed_zhuyin.size(); i++) {
+        zhuyin_input += parsed_zhuyin[i] + "S"; // "S" will be our separator between words
     }
+
+    std::pair<std::vector<std::string>, std::vector<bool>> parse_dict_words = parseDictWords(zhuyin_input, ZHUYIN_TYPE_DICT);
+    std::vector<std::string> parsed_txt = parse_dict_words.first;
+    std::string temp = "";
+
+    for (int i = 0; i < parsed_txt.size(); i++) {
+        if (parse_dict_words.second[i]) { // Changed already
+            temp += parsed_txt[i];
+        } else { // Zhuyin Type
+            temp += zhuyinTypeDefault(parsed_txt[i], file_prefix);
+        }
+    }
+
+    return temp;
 }
 
 std::string zhuyinTypePrecise(std::string input, std::string file_prefix) {
@@ -109,14 +104,19 @@ std::string zhuyinTypePrecise(std::string input, std::string file_prefix) {
 }
 
 std::string zhuyinTypeDefault(std::string input, std::string file_prefix) {
-    // First convert and parse the Zhuyin
+    // First parse the Zhuyin
     std::string text_file = "zhuyin/generated_files/" + file_prefix + "zhuyin_precise.txt";
     std::string text_path = filePath(text_file);
-    std::system(("tobopomo -b '" + input + "'" + " > " + text_path).c_str()); // Call to convert from input to command
-    std::ifstream in(text_path);
-
-    std::vector<std::string> zhuyin_arr = parseTobopomo(read(text_file));
-    write(text_file, "");
+    std::vector<std::string> zhuyin_arr = parse(input, "S");
+    
+    int idx = 0;
+    while (idx < zhuyin_arr.size()) {
+        if (zhuyin_arr[idx] == "S") {
+            zhuyin_arr.erase(idx + zhuyin_arr.begin());
+        } else {
+            idx++;
+        }
+    }
 
     // Secondly get the default output
     std::string output = "";
@@ -143,13 +143,13 @@ std::string qwertyToZhuyin(std::string input, std::string file_prefix) {
     return output;
 }
 
-std::string qwertyToZhuyinNoSpace(std::string input, std::string file_prefix) {
+std::vector<std::string> qwertyToZhuyinVector(std::string input, std::string file_prefix) {
     std::string text_file = "zhuyin/generated_files/" + file_prefix + "qwerty_to_zhuyin.txt";
     std::string text_path = filePath(text_file);
     std::system(("tobopomo -b '" + input + "'" + " > " + text_path).c_str()); // Call to convert from input to command
     std::ifstream in(text_path);
 
-    std::string output = printBopomoNoSpace(parseTobopomo(read(text_file)));
+    std::vector<std::string> output = parseTobopomo(read(text_file));
     deleteFile(text_file); // Delete file
 
     return output;
