@@ -51,24 +51,50 @@ std::string zhuyinDict() {
 }
 
 std::string zhuyinType(std::string input, std::string file_prefix) {
+    // Emoji-fy
+    std::unordered_map<std::string, std::vector<std::string>> EMOJI_DICT = parseDict("zhuyin/zhuyin_type_emoji_dict.txt");
+    EMOJI_DICT = reverseDict(EMOJI_DICT);
+
+    std::pair<std::vector<std::string>, std::vector<bool>> emoji_copy =  parseDictWords(input, EMOJI_DICT);
+
+    // Zhuyin
     std::unordered_map<std::string, std::vector<std::string>> ZHUYIN_TYPE_DICT = parseDict("zhuyin/zhuyin_type_dict.txt");
     ZHUYIN_TYPE_DICT = reverseDict(ZHUYIN_TYPE_DICT);
 
-    std::vector<std::string> parsed_zhuyin = qwertyToZhuyinVector(input, file_prefix);
-    std::string zhuyin_input = "";
-    for (int i = 0; i < parsed_zhuyin.size(); i++) {
-        zhuyin_input += parsed_zhuyin[i] + "S"; // "S" will be our separator between words
+    std::pair<std::vector<std::string>, std::vector<bool>> parse_copy = emoji_copy;
+
+    int idx = 0;
+    for (int i = 0; i < emoji_copy.first.size(); i++) {
+        if (!emoji_copy.second[i]) { // Not already parsed
+            std::vector<std::string> parse_zhuyin = qwertyToZhuyinVector(emoji_copy.first[i], file_prefix);
+            std::string zhuyin_input = "";
+            for (int i = 0; i < parse_zhuyin.size(); i++) {
+                zhuyin_input += parse_zhuyin[i] + "S"; // "S" will be our separator between words
+            }
+
+            std::pair<std::vector<std::string>, std::vector<bool>> parse_dict = parseDictWords(zhuyin_input, ZHUYIN_TYPE_DICT);
+            parse_copy.first[idx] = parse_dict.first[0];
+            parse_copy.second[idx] = parse_dict.second[0];
+            idx++;
+            for (int j = 1; j < parse_dict.first.size(); j++) {
+                parse_copy.first.insert(idx + parse_copy.first.begin(), parse_dict.first[j]);
+                parse_copy.second.insert(idx + parse_copy.second.begin(),  parse_dict.second[j]);
+                idx++;
+            }
+        } else { // Already parsed
+            parse_copy.second.insert(idx + parse_copy.second.begin(), true);
+            idx++;
+        }
     }
 
-    std::pair<std::vector<std::string>, std::vector<bool>> parse_dict_words = parseDictWords(zhuyin_input, ZHUYIN_TYPE_DICT);
-    std::vector<std::string> parsed_txt = parse_dict_words.first;
+    // Final stringing together
     std::string temp = "";
 
-    for (int i = 0; i < parsed_txt.size(); i++) {
-        if (parse_dict_words.second[i]) { // Changed already
-            temp += parsed_txt[i];
+    for (int i = 0; i < parse_copy.first.size(); i++) {
+        if (parse_copy.second[i]) { // Changed already
+            temp += parse_copy.first[i];
         } else { // Zhuyin Type
-            temp += zhuyinTypeDefault(parsed_txt[i], file_prefix);
+            temp += zhuyinTypeDefault(parse_copy.first[i], file_prefix);
         }
     }
 
