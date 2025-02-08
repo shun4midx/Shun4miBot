@@ -7,7 +7,6 @@
 
 #include <iostream>
 #include <vector>
-#include <dpp/dpp.h>
 #include "parsing.h"
 
 std::vector<std::string> parse(std::string& choices, std::string separator) {
