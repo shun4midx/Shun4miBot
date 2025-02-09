@@ -12,10 +12,11 @@
 #include "../file_manager/file_manager.h"
 #include "../dictionary/dictionary.h"
 #include "../parsing/parsing.h"
+#include "../zhuyinify/zhuyinify.h"
 
 // ======== MAIN FUNCTIONS ======= //
 // Disclaimer: This is so far just a joke thing, please don't take it seriously
-std::vector<std::string> zhuyinify(std::string str) {
+std::vector<std::string> zhuyinify(std::string str, std::string file_prefix) {
     std::unordered_map<std::string, std::vector<std::string>> ZHUYIN_JOKE_DICT = parseDict("zhuyin/zhuyin_joke_dict.txt");
     std::unordered_map<std::string, std::vector<std::string>> ZHUYIN_DICT = parseDict("zhuyin/zhuyin_dict.txt");
 
@@ -24,6 +25,7 @@ std::vector<std::string> zhuyinify(std::string str) {
     if (ZHUYIN_JOKE_DICT.find(str) != ZHUYIN_JOKE_DICT.end()) {
         return ZHUYIN_JOKE_DICT[str];
     } else {
+        /*
         std::vector<std::string> parsed_txt = parseDictWords(str, ZHUYIN_DICT).first;
         std::vector<std::string> output;
         std::string temp = "";
@@ -39,11 +41,17 @@ std::vector<std::string> zhuyinify(std::string str) {
         output.push_back(temp);
 
         return output;
+        */
+       
+        // Zhuyinify.h
+        std::vector<std::string> output;
+        output.push_back(pinyin(str, file_prefix));
+        return output;
     }
 }
 
-std::string zhuyinifyString(std::string str) {
-    return zhuyinify(str)[0];
+std::string zhuyinifyString(std::string str, std::string file_prefix) {
+    return zhuyinify(str, file_prefix)[0];
 }
 
 std::string zhuyinDict() {
@@ -51,22 +59,22 @@ std::string zhuyinDict() {
 }
 
 std::string zhuyinType(std::string input, std::string file_prefix) {
-    // Emoji-fy
-    std::unordered_map<std::string, std::vector<std::string>> EMOJI_DICT = parseDict("zhuyin/zhuyin_type_emoji_dict.txt");
-    EMOJI_DICT = reverseDict(EMOJI_DICT);
+    // Symbol-fy (includes emojis and symbols)
+    std::unordered_map<std::string, std::vector<std::string>> SYMBOL_DICT = parseDict("zhuyin/zhuyin_type_symbol_dict.txt");
+    SYMBOL_DICT = reverseDict(SYMBOL_DICT);
 
-    std::pair<std::vector<std::string>, std::vector<bool>> emoji_copy =  parseDictWords(input, EMOJI_DICT);
+    std::pair<std::vector<std::string>, std::vector<bool>> symbol_copy =  parseDictWords(input, SYMBOL_DICT);
 
     // Zhuyin
     std::unordered_map<std::string, std::vector<std::string>> ZHUYIN_TYPE_DICT = parseDict("zhuyin/zhuyin_type_dict.txt");
     ZHUYIN_TYPE_DICT = reverseDict(ZHUYIN_TYPE_DICT);
 
-    std::pair<std::vector<std::string>, std::vector<bool>> parse_copy = emoji_copy;
+    std::pair<std::vector<std::string>, std::vector<bool>> parse_copy = symbol_copy;
 
     int idx = 0;
-    for (int i = 0; i < emoji_copy.first.size(); i++) {
-        if (!emoji_copy.second[i]) { // Not already parsed
-            std::vector<std::string> parse_zhuyin = qwertyToZhuyinVector(emoji_copy.first[i], file_prefix);
+    for (int i = 0; i < symbol_copy.first.size(); i++) {
+        if (!symbol_copy.second[i]) { // Not already parsed
+            std::vector<std::string> parse_zhuyin = qwertyToZhuyinVector(symbol_copy.first[i], file_prefix);
             std::string zhuyin_input = "";
             for (int i = 0; i < parse_zhuyin.size(); i++) {
                 zhuyin_input += parse_zhuyin[i] + "S"; // "S" will be our separator between words

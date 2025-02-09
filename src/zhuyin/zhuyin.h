@@ -9,8 +9,8 @@
 
 #include <iostream>
 
-std::vector<std::string> zhuyinify(std::string str); // Converts str into Zhuyin and if there is any edits required, it's appended to the back of the vector
-std::string zhuyinifyString(std::string str); // Returns what the str is converted into Zhuyin
+std::vector<std::string> zhuyinify(std::string str, std::string file_prefix); // Converts str into Zhuyin and if there is any edits required, it's appended to the back of the vector
+std::string zhuyinifyString(std::string str, std::string file_prefix); // Returns what the str is converted into Zhuyin
 std::string zhuyinDict(); // Returns the entire txt file of the current custom Zhuyin dictionary available entries
 std::string zhuyinType(std::string input, std::string file_prefix); // Converts QWERTY input into Traditional Chinese characters
 std::string zhuyinTypePrecise(std::string input, std::string file_prefix); // Outputs max top 10 likely characters for each bopomo syllable typed
