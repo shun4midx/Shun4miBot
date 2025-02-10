@@ -21,7 +21,7 @@ std::string formatInput(std::string input) {
         output += parsed_txt[i];
     }
 
-    // Check the like ^{} stuff iin brackets
+    // Check the like ^{} stuff in brackets
 
     return output;
 }
