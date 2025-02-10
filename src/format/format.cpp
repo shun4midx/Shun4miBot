@@ -12,7 +12,7 @@ std::string formatInput(std::string input) {
     std::unordered_map<std::string, std::vector<std::string>> FORMAT_DICT = parseDict("format/format_dict.txt", true);
     FORMAT_DICT = reverseDict(FORMAT_DICT);
 
-    // CHeck easier parse first
+    // Check easier parse first
     std::pair<std::vector<std::string>, std::vector<bool>> parse_dict_words = parseDictWords(input, FORMAT_DICT);
     std::vector<std::string> parsed_txt = parse_dict_words.first;
     std::string output = "";
