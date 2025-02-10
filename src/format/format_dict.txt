@@ -183,6 +183,7 @@
 Π: \Pi, \Product
 Γ: \Gamma
 Λ: \Lambda
+Ω: \Omega
 √: \sqrt
 ∛: \cbrt
 ∜: \fourthrt, \4thrt
@@ -209,11 +210,11 @@
 ∴: \therefore
 ⊕: \oplus
 ⊗: \otimes
-≅: \approx
+≅: \cong
 ≤: <=, \leq, \le
 ≥: >=, \geq, \ge
-≠: \neq
-≡: \cong
+≠: \neq, \ne
+≡: \equiv
 ≢: \ncong
 Ø: \emptyset
 ∣: \divides, \div
@@ -233,4 +234,4 @@
 ±: \pm
 ∓: \mp
 ∠: \angle
-∝: \prop 
+∝: \prop
