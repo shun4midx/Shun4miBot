@@ -40,7 +40,7 @@ def completeUser():
 
 if __name__ == "__main__": 
     cpp_to_py_file = open(os.path.join(os.path.dirname(__file__), "generated_files/" + getUser() + "cpp_to_py.txt"), "r")
-    output = p.pinyin(cpp_to_py_file.read(), tone_numbers=True, spaces=True)
+    output = p.pinyin(cpp_to_py_file.read(), tone_numbers = True, spaces = True)
 
     py_to_cpp_file = open(os.path.join(os.path.dirname(__file__), "generated_files/" + getUser() + "py_to_cpp.txt"), "w")
     py_to_cpp_file.write(output)

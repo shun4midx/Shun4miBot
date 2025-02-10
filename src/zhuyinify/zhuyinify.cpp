@@ -30,3 +30,7 @@ std::string pinyin(std::string text, std::string file_prefix) {
     // Return answer
     return output;
 }
+
+std::string zhuyinifyChars(std::string text, std::string file_prefix) {
+    return pinyin(text, file_prefix);
+}

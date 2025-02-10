@@ -29,6 +29,7 @@
 #include "to_do/to_do.h"
 #include "dictionary/dictionary.h"
 #include "zhuyinify/zhuyinify.h"
+#include "format/format.h"
 
 int main() {
     std::srand(unsigned(time(NULL)));
@@ -355,10 +356,9 @@ int main() {
         // ======== ZHUYIN ======== // (I will actually make this a serious thing later, but this is for fun)
         if (event.command.get_command_name() == "zhuyin" && checkInstance("zhuyin_alpha_auths.txt", event.command.usr.username)) {
             std::string term = std::get<std::string>(event.get_parameter("term"));
-            std::vector<std::string> zhuyinify_arr = zhuyinify(term);
+            event.reply("Hmm, Shun4miBot is thinking...");
 
-            event.reply(zhuyinify_arr[0]);
-            zhuyinify_arr.erase(zhuyinify_arr.begin());
+            std::vector<std::string> zhuyinify_arr = zhuyinify(term, event.command.usr.username + "_");
 
             while (zhuyinify_arr.size() != 0) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(1000));
@@ -551,7 +551,11 @@ int main() {
         }
 
         // ======== FORMAT TEXT ======== // (Subscripts, Superscripts, Greek symbols, Math symbols, just made for copy and pasting ease, could be considered a mini text parser)
-        
+        if (event.command.get_command_name() == "format") {
+            std::string input = std::get<std::string>(event.get_parameter("input"));
+            event.reply(formatInput(input));
+        }
+
         // ======== Shun4MIDI ======== //
     });
 
@@ -837,6 +841,7 @@ int main() {
             bot.global_command_create(dpp::slashcommand("emoji_kitchen", "Supports Shun's shortcuts for Emoji Kitchen stickers", bot.me.id).add_option(dpp::command_option(dpp::co_string, "shortcut", "Shortcut for said sticker", true)));
 
             // ======== FORMAT TEXT ======== // (Subscripts, Superscripts, Greek symbols, Math symbols, just made for copy and pasting ease, could be considered a mini text parser)
+            bot.global_command_create(dpp::slashcommand("format", "Converts the input into a copy and paste-able text with math symbols", bot.me.id).add_option(dpp::command_option(dpp::co_string, "input", "The input to be converted", true)));
 
             // ======== Shun4MIDI ======== //
         }

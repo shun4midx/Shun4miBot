@@ -8,3 +8,5 @@
 #pragma once
 
 #include <iostream>
+
+std::string formatInput(std::string input);
