@@ -9,7 +9,7 @@
 #include "../dictionary/dictionary.h"
 
 std::string formatInput(std::string input) {
-    std::unordered_map<std::string, std::vector<std::string>> FORMAT_DICT = parseDict("format/format_dict.txt");
+    std::unordered_map<std::string, std::vector<std::string>> FORMAT_DICT = parseDict("format/format_dict.txt", true);
     FORMAT_DICT = reverseDict(FORMAT_DICT);
 
     // CHeck easier parse first

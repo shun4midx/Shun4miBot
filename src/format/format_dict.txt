@@ -1,0 +1,185 @@
+⁰: ^0
+¹: ^1
+²: ^2
+³: ^3
+⁴: ^4
+⁵: ^5
+⁶: ^6
+⁷: ^7
+⁸: ^8
+⁹: ^9
+⁺: ^\plus, ^+
+⁻: ^\minus, ^-
+⁽: ^(, ^\lpar
+⁾: ^), ^\rpar
+⁼: ^=, ^\eq
+˙: ^., ^\dot
+₀: _0
+₁: _1
+₂: _2
+₃: _3
+₄: _4
+₅: _5
+₆: _6
+₇: _7
+₈: _8
+₉: _9
+₊: _+, _\plus
+₋: _-, _\minus
+₌: _=, _\eq
+₍: _(, _\lpar
+₎: _), _\rpar
+.: _., _\dot
+ᵃ: ^a
+ᵇ: ^b
+ᶜ: ^c
+ᵈ: ^d
+ᵉ: ^e
+ᶠ: ^f
+ᵍ: ^g
+ʰ: ^h
+ᶦ: ^i
+ʲ: ^j
+ᵏ: ^k
+ˡ: ^l
+ᵐ: ^m
+ⁿ: ^n
+ᵒ: ^o
+ᵖ: ^p
+ʳ: ^r
+ˢ: ^s
+ᵗ: ^t
+ᵘ: ^u
+ᵛ: ^v
+ʷ: ^w
+ˣ: ^x
+ʸ: ^y
+ᶻ: ^z
+ᴬ: ^A
+ᴮ: ^B
+ᶜ: ^C
+ᴰ: ^D
+ᴱ: ^E
+ᶠ: ^F
+ᴳ: ^G
+ᴴ: ^H
+ᴵ: ^I
+ᴶ: ^J
+ᴷ: ^K
+ᴸ: ^L
+ᴹ: ^M
+ᴺ: ^N
+ᴼ: ^O
+ᴾ: ^P
+ᴿ: ^R
+ˢ: ^S
+ᵀ: ^T
+ᵁ: ^U
+ⱽ: ^V
+ᵂ: ^W
+ˣ: ^X
+ʸ: ^Y
+ᶻ: ^Z
+ₐ: _a
+₆: _b
+꜀: _c
+ₔ: _d
+ₑ: _e
+₉: _g
+ₕ: _h
+ᵢ: _i
+ⱼ: _j
+ₖ: _k
+ₗ: _l
+ₘ: _m
+ₙ: _n
+ₒ: _o
+ₚ: _p
+ᵣ: _r
+ₛ: _s
+ₜ: _t
+ᵤ: _u
+ᵥ: _v
+ᵥᵥ: _w
+ₓ: _x
+ᵧ: _y
+₂: _z
+π: \pi
+α: \alpha
+β: \beta
+γ: \gamma
+δ: \delta
+ε: \epsilon, \varepsilon
+τ: \tau
+μ: \mu
+χ: \chi
+σ: \sigma
+η: \eta
+ρ: \rho
+ζ: \zeta
+ψ: \psi
+ω: \omega
+ν: \nu
+ξ: \xi
+θ: \theta
+κ: \kappa
+ι: \iota
+λ: \lambda
+φ: \phi, \varhi
+Δ: \Delta
+Φ: \Phi, \Varphi
+Σ: \Sigma, \Sum
+Π: \Pi, \Product
+Γ: \Gamma
+Λ: \Lambda
+√: \sqrt
+∛: \cbrt
+∜: \fourthrt, \4thrt
+∀: \forall
+∃: \exists
+∈: \in
+∉: \notin
+⇒: \implies
+⇐: \Leftarrow, \leftarrow
+⇔: \iff
+⇏: \nimplies
+⇍: \nLeftarrow, \nleftarrow
+⇎: \niff
+∩: \cap
+∪: \cup
+⊓: \sqcap
+⊔: \sqcup
+∧: \wedge
+∨: \vee
+⊆: \subseteq
+⊈: \nsubseteq
+◻: \qed
+∵: \since
+∴: \therefore
+⊕: \oplus
+⊗: \otimes
+≅: \approx
+≤: <=, \leq, \le
+≥: >=, \geq, \ge
+≠: \neq
+≡: \cong
+≢: \ncong
+Ø: \emptyset
+∣: \divides, \div
+∤: \ndiv
+∞: \infty
+∫: \int
+⊳: \triangleright
+⊲: \triangleleft
+⋪: \ntriangleleft
+⋫: \ntriangleright
+⊵: \trianglerighteq
+⊴: \trianglelefteq
+⋬: \ntrianglelefteq
+⋭: \ntrianglerighteq
+△: \triangle
+∂: \partial
+±: \pm
+∓: \mp
+∠: \angle
+∝: \prop 
