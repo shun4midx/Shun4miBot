@@ -627,7 +627,7 @@ int main() {
             if (message.find("/shuffle") == 0) { // Begins with /shuffle
                 std::string command = "/shuffle";
                 std::string list = message.substr(command.length() + 1, message.length() - command.length());
-                event.reply(list);
+                event.reply(vectorString(shuffleList(list, "\n")));
             }
 
             // ======== CUTLET ======== //
@@ -688,14 +688,8 @@ int main() {
             std::string og_message = message;
             std::transform(message.begin(), message.end(), message.begin(), ::tolower);
             if (message.find("shun for midex") != std::string::npos) {
+                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🤡");
                 event.reply("Fuck you");
-                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🇺");
-                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🇴");
-                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🇾");
-                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🇰");
-                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🇨");
-                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🇫");
-                bot.message_add_reaction(event.msg.id, event.msg.channel_id, "🖕");
             } else if (message.find("shun4mibot") != std::string::npos || ((message.find("my bot") != std::string::npos || message.find("my discord bot") != std::string::npos) && event.msg.author.username == "shun4midx")) {
                 event.reply("Omg me mention! I love Shun4mis :D :ocean::ocean:", true);
             } else if (message.find("shun4mi") != std::string::npos || message.find("shunami") != std::string::npos || message.find("tsunami") != std::string::npos || message.find("tsun4mi") != std::string::npos) {
@@ -739,6 +733,14 @@ int main() {
                 og_message.replace(og_message.find(":this_is_fine:"), this_is_fine.length(), this_is_fine_emoji);
                 bot.message_add_reaction(event.msg.id, event.msg.channel_id, this_is_fine_dpp_emoji);
                 event.reply(og_message, true);
+            }
+
+            if (message.find("meme") != std::string::npos && message.find("antimeme") == std::string::npos) { // Find meme without "antimeme"
+                bot.message_add_reaction(event.msg.id, event.msg.channel_id, ":antimeme:1339228807193694209");
+                event.reply("Antimeme <:antimeme:1339228807193694209>");
+            } else if (message.find("antimeme") != std::string::npos) {
+                bot.message_add_reaction(event.msg.id, event.msg.channel_id, this_is_fine_dpp_emoji);
+                event.reply("Meme <:this_is_fine:1336212781673742408>");
             }
 
             // ========= SAVE ME ======== //
