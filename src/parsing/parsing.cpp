@@ -9,7 +9,7 @@
 #include <vector>
 #include "parsing.h"
 
-std::vector<std::string> parse(std::string& choices, std::string separator) {
+std::vector<std::string> parse(std::string choices, std::string separator) {
     std::vector<std::string> parsed;
     std::string temp = "";
 

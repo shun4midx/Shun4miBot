@@ -373,28 +373,32 @@ int main() {
             if (last_char != '3'  && last_char != '4' && last_char != '6' && last_char != '7') { // Last tone is a first tone
                 input += ' ';
             }
-            event.reply(zhuyinType(input, event.command.usr.username + "_"));
+            event.reply("Hmm, Shun4miBot is thinking...");
+            event.edit_original_response(dpp::message(zhuyinType(input, event.command.usr.username + "_")));
         } else if (event.command.get_command_name() == "zhuyin_type_precise") {
             std::string input = std::get<std::string>(event.get_parameter("input"));
             char last_char = input[input.length() - 1];
             if (last_char != '3'  && last_char != '4' && last_char != '6' && last_char != '7') { // Last tone is a first tone
                 input += ' ';
             }
-            event.reply(zhuyinTypePrecise(input, event.command.usr.username + "_"));
+            event.reply("Hmm, Shun4miBot is thinking...");
+            event.edit_original_response(dpp::message(zhuyinTypePrecise(input, event.command.usr.username + "_")));
         } else if (event.command.get_command_name() == "zhuyin_type_default") {
             std::string input = std::get<std::string>(event.get_parameter("input"));
             char last_char = input[input.length() - 1];
             if (last_char != '3'  && last_char != '4' && last_char != '6' && last_char != '7') { // Last tone is a first tone
                 input += ' ';
             }
-            event.reply(zhuyinTypeDefault(input, event.command.usr.username + "_"));
+            event.reply("Hmm, Shun4miBot is thinking...");
+            event.edit_original_response(dpp::message(zhuyinTypeDefault(input, event.command.usr.username + "_")));
         } else if (event.command.get_command_name() == "qwerty_to_zhuyin") {
             std::string input = std::get<std::string>(event.get_parameter("input"));
             char last_char = input[input.length() - 1];
             if (last_char != '3'  && last_char != '4' && last_char != '6' && last_char != '7') { // Last tone is a first tone
                 input += ' ';
             }
-            event.reply(qwertyToZhuyin(input, event.command.usr.username + "_"));
+            event.reply("Hmm, Shun4miBot is thinking...");
+            event.edit_original_response(dpp::message(qwertyToZhuyin(input, event.command.usr.username + "_")));
         }
 
         // ======== JAPANESE SUPPORT ======== //
@@ -679,6 +683,47 @@ int main() {
                     event.reply(message);
                 } else {
                     event.reply("Said file doesn't exist");
+                }
+            }
+
+            // ======== SPOTIFY ======== //    
+            // We want "/spotify_new and /spotify_undo" and also /spotify_view
+            if (checkInstance("spotify_edit_auths.txt", event.msg.author.username)) {
+                if (message.find("/spotify_new") == 0 || message.find("/spotify_add") == 0) {
+                    std::string command = "/spotify_new";
+                    std::string shortcut = message.substr(command.length() + 1, message.length() - command.length());
+                    std::vector<std::string> parsed_shortcut = parse(shortcut, "\n");
+
+                    std::string formated_shortcut = parsed_shortcut[0] + ": " + parsed_shortcut[1];
+                    write("spotify/playlist_dict.txt", read("spotify/playlist_dict.txt") + "\n" + formated_shortcut);
+
+                    event.reply("New Spotify shortcut added!");
+                } else if (message.find("/spotify_undo") == 0) {
+                    std::vector<std::string> all_shortcuts = parse(read("spotify/playlist_dict.txt"), "\n");
+                    all_shortcuts.pop_back();
+                    write("spotify/playlist_dict.txt", vectorString(all_shortcuts));
+                    event.reply("Previous Spotify shortcut undone!");
+                } else if (message.find("/spotify_view") == 0) {
+                    std::string content = read("spotify/playlist_dict.txt");
+                    
+                    if (content.length() <= 1991) {
+                        event.send("```\n" + content + "\n```");
+                    } else {
+                        std::string str1 = content.substr(0, 1991);
+                        std::string str2 = content.substr(1991);
+
+                        event.send("```\n" + str1 + "\n```");
+                        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+                        while (str2.length() > 1991) {
+                            str1 = str2.substr(0, 1991);
+                            str2 = str2.substr(1991);
+                            event.send("```\n" + str1 + "\n```");
+                            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                        }
+
+                        event.send("```\n" + str2 + "\n```");
+                    }
                 }
             }
 

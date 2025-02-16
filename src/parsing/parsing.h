@@ -10,5 +10,5 @@
 #include <vector>
 #include <string>
 
-std::vector<std::string> parse(std::string& choices, std::string separator);
+std::vector<std::string> parse(std::string choices, std::string separator);
 std::string vectorString(std::vector<std::string> arr);

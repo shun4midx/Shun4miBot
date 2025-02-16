@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string.h>
 #include <unordered_map>
+#include <algorithm>
 #include "zhuyin.h"
 #include "../file_manager/file_manager.h"
 #include "../dictionary/dictionary.h"
@@ -113,8 +114,16 @@ std::string zhuyinTypePrecise(std::string input, std::string file_prefix) {
     // First convert and parse the Zhuyin
     std::string text_file = "zhuyin/generated_files/" + file_prefix + "zhuyin_precise.txt";
     std::string text_path = filePath(text_file);
-    std::system(("tobopomo -b '" + input + "'" + " > " + text_path).c_str()); // Call to convert from input to command
+
+    int ret_val = std::system(("tobopomo -b '" + input + "'" + " > " + text_path).c_str()); // Call to convert from input to command
+    if (ret_val != 0) { // Error returning
+        return "Invalid Input";
+    }
+    
     std::ifstream in(text_path);
+    if (!in) { // Error returning
+        return "Invalid Input";
+    }
 
     std::vector<std::string> zhuyin_arr = parseTobopomo(read(text_file));
     write(text_file, "");
@@ -122,8 +131,15 @@ std::string zhuyinTypePrecise(std::string input, std::string file_prefix) {
     // Secondly get the precise output
     std::string output = "";
     for (int i = 0; i < zhuyin_arr.size(); i++) {
-        std::system(("tobopomo -k '" + zhuyin_arr[i] + "' -l 6 > " + text_path).c_str());
+        int ret_val = std::system(("tobopomo -k '" + zhuyin_arr[i] + "' -l 6 > " + text_path).c_str());
+        if (ret_val != 0) { // Error returning
+            return "Invalid Input";
+        }
+
         std::ifstream in(text_path);
+        if (!in) { // Error returning
+            return "Invalid Input";
+        }
 
         output += readSingleLine(text_file);
 
@@ -155,8 +171,16 @@ std::string zhuyinTypeDefault(std::string input, std::string file_prefix) {
     // Secondly get the default output
     std::string output = "";
     for (int i = 0; i < zhuyin_arr.size(); i++) {
-        std::system(("tobopomo -k '" + zhuyin_arr[i] + "' -l 6 > " + text_path).c_str());
+        int ret_val = std::system(("tobopomo -k '" + zhuyin_arr[i] + "' -l 6 > " + text_path).c_str());
+        if (ret_val != 0) { // Error handling
+            return "Invalid Input";
+        }
+
         std::ifstream in(text_path);
+        if (!in) {
+            return "Invalid Input";
+        }
+
         output += parseTobopomo(readSingleLine(text_file))[0];
     }
 
@@ -168,8 +192,15 @@ std::string zhuyinTypeDefault(std::string input, std::string file_prefix) {
 std::string qwertyToZhuyin(std::string input, std::string file_prefix) {
     std::string text_file = "zhuyin/generated_files/" + file_prefix + "qwerty_to_zhuyin.txt";
     std::string text_path = filePath(text_file);
-    std::system(("tobopomo -b '" + input + "'" + " > " + text_path).c_str()); // Call to convert from input to command
+    int ret_val = std::system(("tobopomo -b '" + input + "'" + " > " + text_path).c_str()); // Call to convert from input to command
+    if (ret_val != 0) {
+        return "Invalid Input";
+    }
+    
     std::ifstream in(text_path);
+    if (!in) {
+        return "Invalid Input";
+    }
 
     std::string output = printBopomo(parseTobopomo(read(text_file)));
     deleteFile(text_file); // Delete file
@@ -180,8 +211,19 @@ std::string qwertyToZhuyin(std::string input, std::string file_prefix) {
 std::vector<std::string> qwertyToZhuyinVector(std::string input, std::string file_prefix) {
     std::string text_file = "zhuyin/generated_files/" + file_prefix + "qwerty_to_zhuyin.txt";
     std::string text_path = filePath(text_file);
-    std::system(("tobopomo -b '" + input + "'" + " > " + text_path).c_str()); // Call to convert from input to command
+
+    std::vector<std::string> ret_error;
+    ret_error.push_back("Invalid Input");
+
+    int ret_val = std::system(("tobopomo -b '" + input + "'" + " > " + text_path).c_str()); // Call to convert from input to command
+    if (ret_val != 0) {
+        return ret_error;
+    }
+
     std::ifstream in(text_path);
+    if (!in) {
+        return ret_error;
+    }
 
     std::vector<std::string> output = parseTobopomo(read(text_file));
     deleteFile(text_file); // Delete file

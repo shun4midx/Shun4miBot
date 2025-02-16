@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <unordered_map>
+#include <algorithm>
 #include "dictionary.h"
 #include "../file_manager/file_manager.h"
 #include "../parsing/parsing.h"
