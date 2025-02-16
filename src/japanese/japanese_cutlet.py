@@ -2,7 +2,7 @@
 # Copyright (c) 2025 Shun/翔海 (@shun4midx) #
 # Project: Shun4miBot                      #
 # File Type: Python file                   #
-# File: japanese.py                        #
+# File: japanese_cutlet.py                 #
 ############################################
 
 #!/usr/local/bin python3
