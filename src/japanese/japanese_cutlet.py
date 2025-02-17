@@ -2,14 +2,15 @@
 # Copyright (c) 2025 Shun/翔海 (@shun4midx) #
 # Project: Shun4miBot                      #
 # File Type: Python file                   #
-# File: japanese.py                        #
+# File: japanese_cutlet.py                 #
 ############################################
 
 #!/usr/local/bin python3
 # -*- coding: utf-8 -*-
-from googletrans import Translator
-import asyncio
 import os
+import cutlet
+katsu = cutlet.Cutlet()
+katsu.use_foreign_spelling = False
 
 def getUser():
     edited_prefixes_file = open(os.path.join(os.path.dirname(__file__), "generated_files/edited_prefixes.txt"), "r")
@@ -38,19 +39,12 @@ def completeUser():
 
         edited_prefixes_file.write(new_usernames)
 
-async def translateText(jp_phrase):
-    async with Translator() as translator:
-        result = await translator.translate(jp_phrase, dest='ja')
-        return result.pronunciation
-
 if __name__ == "__main__": 
     cpp_to_py_file = open(os.path.join(os.path.dirname(__file__), "generated_files/" + getUser() + "cpp_to_py.txt"), "r")
-    jp_phrase = cpp_to_py_file.read()
-    
-    ans = asyncio.run(translateText(jp_phrase))
+    test = katsu.romaji(cpp_to_py_file.read())
 
     py_to_cpp_file = open(os.path.join(os.path.dirname(__file__), "generated_files/" + getUser() + "py_to_cpp.txt"), "w")
-    py_to_cpp_file.write(ans)
+    py_to_cpp_file.write(test)
     py_to_cpp_file.close()
 
     cpp_to_py_file.close()

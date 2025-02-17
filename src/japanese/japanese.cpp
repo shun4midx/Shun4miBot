@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <cmath>
 #include <unordered_map>
+#include <algorithm>
 #include "../file_manager/file_manager.h"
 #include "../dictionary/dictionary.h"
 
@@ -48,15 +49,24 @@ std::string cppCutlet(std::string phrase, std::string file_prefix) {
 	write("japanese/generated_files/" + file_prefix + "cpp_to_py.txt", phrase, true);
 
 	// Call cutlet
-	std::system(("/usr/local/bin/python3 " + filePath("japanese/japanese.py", true)).c_str());
+	std::system((read("python_path/japanese.txt") + filePath("japanese/japanese.py", true)).c_str());
 	std::string cutlet_phrase = read("japanese/generated_files/" + file_prefix + "py_to_cpp.txt", true);
 
 	// Delete files
 	deleteFile("japanese/generated_files/" + file_prefix + "cpp_to_py.txt", true);
 	deleteFile("japanese/generated_files/" + file_prefix + "py_to_cpp.txt", true);
 
+	// Convert answer with the accented letters to regular letters
+	std::unordered_map<std::string, std::vector<std::string>> ROMAJI_DICT = parseDict("japanese/romaji_dict.txt");
+	std::vector<std::string> output_arr = parseDictWords(cutlet_phrase, ROMAJI_DICT).first;
+	std::string output = "";
+	for (std::string phrase : output_arr) {
+		output += phrase;
+	}
+
 	// Return answer
-	return cutlet_phrase;
+	// return cutlet_phrase;
+	return output;
 }
 
 std::string toRomaji(std::string phrase, std::string file_prefix) {

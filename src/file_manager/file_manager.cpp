@@ -9,6 +9,7 @@
 #include <vector>
 #include <fstream>
 #include <filesystem>
+#include <algorithm>
 #include "file_manager.h"
 
 std::string filePath(std::string file_name, bool in_src) {

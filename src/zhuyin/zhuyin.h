@@ -8,6 +8,7 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
 
 std::vector<std::string> zhuyinify(std::string str, std::string file_prefix); // Converts str into Zhuyin and if there is any edits required, it's appended to the back of the vector
 std::string zhuyinifyString(std::string str, std::string file_prefix); // Returns what the str is converted into Zhuyin

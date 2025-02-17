@@ -8,6 +8,7 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include <algorithm>
 #include "zhuyinify.h"
 #include "../file_manager/file_manager.h"
 
@@ -20,7 +21,7 @@ std::string pinyin(std::string text, std::string file_prefix) {
     write("zhuyinify/generated_files/" + file_prefix + "cpp_to_py.txt", text, true);
 
     // Call translate
-    std::system(("/usr/local/bin/python3 " + filePath("zhuyinify/zhuyinify.py", true)).c_str());
+    std::system((read("python_path/zhuyinify.txt") + filePath("zhuyinify/zhuyinify.py", true)).c_str());
     std::string output = read("zhuyinify/generated_files/" + file_prefix + "py_to_cpp.txt", true);
 
     // Delete files
