@@ -167,7 +167,7 @@ bool bumpPriority(int task_priority, int new_priority, std::string file_prefix) 
 
 std::string allLists(std::string username) {
     if (checkFile(allListsPath(username))) {
-        return (read(allListsPath(username)) == "" ? "None" : numberify(readVector(allListsPath(username))));
+        return (read(allListsPath(username)) == "" ? "None" : "```\n" + numberify(readVector(allListsPath(username))) + "```\n");
     } else {
         return "None";
     }
@@ -200,7 +200,7 @@ std::string swapListPriorities(int priority1, int priority2, std::string usernam
         write(allListsPath(username), vectorString(lists));
 
         // Return
-        return "```Here is the new order of your lists!\n```" + numberify(readVector(allListsPath(username)));
+        return "Here is the new order of your lists!```\n" + numberify(readVector(allListsPath(username))) + "```\n";
     }
 }
 
@@ -230,6 +230,6 @@ std::string bumpListPriority(int list_priority, int new_priority, std::string us
         write(allListsPath(username), vectorString(lists));
 
         // Return
-        return "```Here is the new order of your lists!\n```" + numberify(readVector(allListsPath(username)));
+        return "Here is the new order of your lists!```\n" + numberify(readVector(allListsPath(username))) + "```\n";
     }
 }
