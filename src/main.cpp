@@ -35,7 +35,7 @@ int main() {
     std::srand(unsigned(time(NULL)));
 
     dpp::cluster bot(read("bot_token.txt"), dpp::i_default_intents | dpp::i_message_content);
- 
+
     // Main Program
     bot.on_log(dpp::utility::cout_logger());
     
@@ -693,7 +693,7 @@ int main() {
                 event.reply("```\n" + str2);
             }
         }
-         
+        
         // ======== SPOTIFY LINKS ======== //
         if (event.command.get_command_name() == "spotify_playlist" && checkInstance("spotify_shortcut_auths.txt", event.command.usr.username)) {
             std::string playlist = std::get<std::string>(event.get_parameter("playlist"));
@@ -1086,7 +1086,7 @@ int main() {
             }
         }
     });
- 
+
     bot.start(dpp::st_wait);
 
     return 0;
