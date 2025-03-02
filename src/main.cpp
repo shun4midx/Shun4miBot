@@ -430,7 +430,25 @@ int main() {
                 event.reply("You don't have this list, did you meant to create a new list?");
             } else {
                 newTask(task_name, file_prefix);
-                event.reply("Your new task has been created, here is your updated list for \"" + list_name + "\"!\n```\n" + numberify(readVector(listPath(file_prefix))) + "\n```");
+                std::string content = "Your new task has been created, here is your updated list for \"" + list_name + "\"!\n```\n" + numberify(readVector(listPath(file_prefix)));
+                    if (content.length() <= 1991) {
+                        event.reply(content + "```\n");
+                    } else {
+                        std::string str1 = content.substr(0, 1991);
+                        std::string str2 = content.substr(1991);
+
+                        event.reply(str1 + "\n```");
+                        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+                        while (str2.length() > 1991) {
+                            str1 = str2.substr(0, 1991);
+                            str2 = str2.substr(1991);
+                            event.reply("```\n" + str1 + "\n```");
+                            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                        }
+
+                        event.reply("```\n" + str2 + "\n```");
+                    }
             }
         } else if (event.command.get_command_name() == "delete_task") {
             std::string list_name = std::get<std::string>(event.get_parameter("list_name"));
@@ -440,7 +458,26 @@ int main() {
                 event.reply("You don't have this list, did you meant to create a new list?");
             } else {
                 if (deleteTask(task_priority, file_prefix)) {
-                    event.reply("Your task has been deleted, here is your updated list for \"" + list_name + "\"!\n```\n" + numberify(readVector(listPath(file_prefix))) + "\n```");
+                    std::string content = "Your task has been deleted, here is your updated list for \"" + list_name + "\"!\n```\n" + numberify(readVector(listPath(file_prefix)));
+                    
+                    if (content.length() <= 1991) {
+                        event.reply(content + "\n```");
+                    } else {
+                        std::string str1 = content.substr(0, 1991);
+                        std::string str2 = content.substr(1991);
+
+                        event.reply(str1 + "\n```");
+                        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+                        while (str2.length() > 1991) {
+                            str1 = str2.substr(0, 1991);
+                            str2 = str2.substr(1991);
+                            event.reply("```\n" + str1 + "\n```");
+                            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                        }
+
+                        event.reply("```\n" + str2 + "\n```");
+                    }
                 } else {
                     event.reply("Your input is invalid.");
                 }
@@ -456,7 +493,26 @@ int main() {
                 if (task_priority1 == task_priority2) {
                     event.reply("? Did you have a typo with task priorities?");
                 } else if (swapPriorities(task_priority1, task_priority2, file_prefix)) {
-                    event.reply("Your tasks' priorities have been swapped, here is your updated list for \"" + list_name + "\"!\n```\n" + numberify(readVector(listPath(file_prefix))) + "\n```");
+                    std::string content = "Your tasks' priorities have been swapped, here is your updated list for \"" + list_name + "\"!\n```\n" + numberify(readVector(listPath(file_prefix)));
+
+                    if (content.length() <= 1991) {
+                        event.reply(content + "\n```");
+                    } else {
+                        std::string str1 = content.substr(0, 1991);
+                        std::string str2 = content.substr(1991);
+
+                        event.reply(str1 + "\n```");
+                        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+                        while (str2.length() > 1991) {
+                            str1 = str2.substr(0, 1991);
+                            str2 = str2.substr(1991);
+                            event.reply("```\n" + str1 + "\n```");
+                            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                        }
+
+                        event.reply("```\n" + str2 + "\n```");
+                    }
                 } else {
                     event.reply("Your input is invalid.");
                 }
@@ -472,18 +528,75 @@ int main() {
                 if (task_priority == new_priority) {
                     event.reply("? Did you have a typo with task priorities?");
                 } else if (bumpPriority(task_priority, new_priority, file_prefix)) {
-                    event.reply("Your task's priority have been bumped, here is your updated list for \"" + list_name + "\"!\n```\n" + numberify(readVector(listPath(file_prefix))) + "\n```");
+                    std::string content = "Your task's priority have been bumped, here is your updated list for \"" + list_name + "\"!\n```\n" + numberify(readVector(listPath(file_prefix)));
+
+                    if (content.length() <= 1991) {
+                        event.reply(content + "\n```");
+                    } else {
+                        std::string str1 = content.substr(0, 1991);
+                        std::string str2 = content.substr(1991);
+
+                        event.reply(str1 + "\n```");
+                        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+                        while (str2.length() > 1991) {
+                            str1 = str2.substr(0, 1991);
+                            str2 = str2.substr(1991);
+                            event.reply("```\n" + str1 + "\n```");
+                            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                        }
+
+                        event.reply("```\n" + str2 + "\n```");
+                    }
                 } else {
                     event.reply("Your input is invalid.");
                 }
             }
         } else if (event.command.get_command_name() == "all_lists") {
-            event.reply(allLists(event.command.usr.username));
+            std::string content = allLists(event.command.usr.username);
+
+            if (content.length() <= 1991) {
+                event.reply(content);
+            } else {
+                std::string str1 = content.substr(0, 1991);
+                std::string str2 = content.substr(1991);
+
+                event.reply(str1 + "\n```");
+                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+                while (str2.length() > 1991) {
+                    str1 = str2.substr(0, 1991);
+                    str2 = str2.substr(1991);
+                    event.reply("```\n" + str1 + "\n```");
+                    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                }
+
+                event.reply("```\n" + str2);
+            }
         } else if (event.command.get_command_name() == "view_list") {
             std::string list_name = std::get<std::string>(event.get_parameter("list_name"));
             std::string file_prefix = event.command.usr.username + "_" + list_name + "_";
             if (checkFile("to_do/generated_files/" + file_prefix + "list.txt")) {
-                event.reply("Here is your list for \"" + list_name + "\"!\n```\n" + numberify(readVector(listPath(file_prefix))) + "\n```");
+                std::string content = "Here is your list for \"" + list_name + "\"!\n```\n" + numberify(readVector(listPath(file_prefix)));
+
+                if (content.length() <= 1991) {
+                    event.reply(content + "\n```");
+                } else {
+                    std::string str1 = content.substr(0, 1991);
+                    std::string str2 = content.substr(1991);
+
+                    event.reply(str1 + "\n```");
+                    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+                    while (str2.length() > 1991) {
+                        str1 = str2.substr(0, 1991);
+                        str2 = str2.substr(1991);
+                        event.reply("```\n" + str1 + "\n```");
+                        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                    }
+
+                    event.reply("```\n" + str2 + "\n```");
+                }
             } else {
                 event.reply("You don't have this list, did you meant to create a new list?");
             }
@@ -507,7 +620,26 @@ int main() {
             } else {
                 int success = renameTask(task_priority, new_name, file_prefix);
                 if (success == 2) {
-                    event.reply("Your task has been renamed, here is your updated list for \"" + list_name + "\"!\n```\n" + numberify(readVector(listPath(file_prefix))) + "\n```");
+                    std::string content = "Your task has been renamed, here is your updated list for \"" + list_name + "\"!\n```\n" + numberify(readVector(listPath(file_prefix)));
+
+                    if (content.length() <= 1991) {
+                        event.reply(content + "\n```");
+                    } else {
+                        std::string str1 = content.substr(0, 1991);
+                        std::string str2 = content.substr(1991);
+
+                        event.reply(str1 + "\n```");
+                        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+                        while (str2.length() > 1991) {
+                            str1 = str2.substr(0, 1991);
+                            str2 = str2.substr(1991);
+                            event.reply("```\n" + str1 + "\n```");
+                            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                        }
+
+                        event.reply("```\n" + str2 + "\n```");
+                    }
                 } else if (success == 1) {
                     event.reply("? Why are you renaming something with the same name as before?");
                 } else if (success == 0) {
@@ -517,11 +649,49 @@ int main() {
         } else if (event.command.get_command_name() == "swap_list_priorities") {
             int list_priority1 = std::stoi(std::get<std::string>(event.get_parameter("list_priority1")));
             int list_priority2 = std::stoi(std::get<std::string>(event.get_parameter("list_priority2")));
-            event.reply(swapListPriorities(list_priority1, list_priority2, event.command.usr.username));
+            std::string content = swapListPriorities(list_priority1, list_priority2, event.command.usr.username);
+
+            if (content.length() <= 1991) {
+                event.reply(content);
+            } else {
+                std::string str1 = content.substr(0, 1991);
+                std::string str2 = content.substr(1991);
+
+                event.reply(str1 + "\n```");
+                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+                while (str2.length() > 1991) {
+                    str1 = str2.substr(0, 1991);
+                    str2 = str2.substr(1991);
+                    event.reply("```\n" + str1 + "\n```");
+                    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                }
+
+                event.reply("```\n" + str2);
+            }
         } else if (event.command.get_command_name() == "bump_list_priority") {
             int list_priority = std::stoi(std::get<std::string>(event.get_parameter("list_priority")));
             int new_priority = std::stoi(std::get<std::string>(event.get_parameter("new_priority")));
-            event.reply(bumpListPriority(list_priority, new_priority, event.command.usr.username));
+            std::string content = bumpListPriority(list_priority, new_priority, event.command.usr.username);
+
+            if (content.length() <= 1991) {
+                event.reply(content);
+            } else {
+                std::string str1 = content.substr(0, 1991);
+                std::string str2 = content.substr(1991);
+
+                event.reply(str1 + "\n```");
+                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+                while (str2.length() > 1991) {
+                    str1 = str2.substr(0, 1991);
+                    str2 = str2.substr(1991);
+                    event.reply("```\n" + str1 + "\n```");
+                    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                }
+
+                event.reply("```\n" + str2);
+            }
         }
          
         // ======== SPOTIFY LINKS ======== //
@@ -651,6 +821,9 @@ int main() {
                 std::string command = "/jp_shortcut";
                 std::string quote = message.substr(command.length() + 1, message.length() - command.length());
                 event.reply(shortcutToJp(quote));
+            } else if (message.find("/reset_cutlet") == 0 && checkInstance("cutlet_auths.txt", event.msg.author.username)) { // Begins with /cutlet
+                write("japanese/generated_files/edited_prefixes.txt", "", true);
+                event.reply("Cutlet has been reset!");
             }
 
             // ======== EMOJI KITCHEN ======= //
@@ -802,6 +975,7 @@ int main() {
         bot.set_presence(dpp::presence(dpp::ps_idle, dpp::at_game, "Abst Alg at 3 am because of Shun's Algebra addiction"));
 
         if (dpp::run_once<struct register_bot_commands>()) {
+            /*
             // ======= SHUN TRIVIA ======== //
             bot.global_command_create(dpp::slashcommand("shun_names", "Outputs all forms of Shun's names", bot.me.id));
             bot.global_command_create(dpp::slashcommand("shun_projects", "Outputs all forms of Shun's current projects", bot.me.id));
@@ -891,6 +1065,7 @@ int main() {
             bot.global_command_create(dpp::slashcommand("format", "Converts the input into a copy and paste-able text with math symbols", bot.me.id).add_option(dpp::command_option(dpp::co_string, "input", "The input to be converted", true)));
 
             // ======== Shun4MIDI ======== //
+            */
         }
     });
 
