@@ -975,7 +975,6 @@ int main() {
         bot.set_presence(dpp::presence(dpp::ps_idle, dpp::at_game, "Abst Alg at 3 am because of Shun's Algebra addiction"));
 
         if (dpp::run_once<struct register_bot_commands>()) {
-            /*
             // ======= SHUN TRIVIA ======== //
             bot.global_command_create(dpp::slashcommand("shun_names", "Outputs all forms of Shun's names", bot.me.id));
             bot.global_command_create(dpp::slashcommand("shun_projects", "Outputs all forms of Shun's current projects", bot.me.id));
@@ -1065,7 +1064,6 @@ int main() {
             bot.global_command_create(dpp::slashcommand("format", "Converts the input into a copy and paste-able text with math symbols", bot.me.id).add_option(dpp::command_option(dpp::co_string, "input", "The input to be converted", true)));
 
             // ======== Shun4MIDI ======== //
-            */
         }
     });
 
