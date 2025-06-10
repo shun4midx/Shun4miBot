@@ -46,7 +46,7 @@ int main() {
         } else if (event.command.get_command_name() == "shun_projects") {
             event.reply("Shun4MIDI Music Tool (shun4midi_en, shun4midi_jp)\nShun4miBot\nPossible Shun4MIDI bot too");
         } else if (event.command.get_command_name() == "shun_pronouns") {
-            event.reply("He/Him, or whatever that equivalent is in another language, except for Japanese.\n\nIn Japanese, Shun uses *boku* instead of *ore* in casual contexts but uses ボク instead of 僕 or ぼく due to personal reasons, so please quote him with ボク when using Japanese! If it's not allowed out of formality of a text, please modify his quote to say 自分 instead.\n\nFor example, when Shun refers to the Yorushika song 'That's why I gave up on Music' in a personal context relating to himself, he usually would write だからボクは音楽を辞めた instead, but if that's not allowed in a text due to formality, he would reference the song but modify it to match his personal context by saying だから自分は音楽をやめった!");
+            event.reply("He/Him, or whatever that equivalent is in another language, except for Japanese, although They/Them is fine too.\n\nIn Japanese, Shun uses *boku* instead of *ore* in casual contexts but uses ボク instead of 僕 or ぼく due to personal reasons, so please quote him with ボク when using Japanese! If it's not allowed out of formality of a text, please modify his quote to say 自分 instead.");
         }
 
         // ======== Shun4miBot QUIRKS ======= //
